@@ -8,13 +8,11 @@
   <style>
     :root{--font:"Cairo",sans-serif;--bg:#090e1a;--bg2:#0f1829;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.1);--border-hi:rgba(255,255,255,.2);--text:#e8edf5;--text-dim:rgba(232,237,245,.55);--accent:#00d4b4;--card-shadow:0 8px 24px rgba(0,0,0,.3)}
     body.light{--bg:#fdf6ec;--bg2:#fffaf4;--surface:rgba(180,120,60,.05);--border:rgba(180,120,60,.14);--border-hi:rgba(180,120,60,.28);--text:#2d2013;--text-dim:rgba(45,32,19,.52);--accent:#0d9488;--card-shadow:0 4px 16px rgba(120,80,20,.1)}
-
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--bg);font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .45s,color .45s}
     body::before{content:"";position:fixed;inset:0;background-image:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(0,212,180,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(99,102,241,.06) 0%,transparent 55%);pointer-events:none;z-index:0}
     body.light::before{background-image:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(255,200,100,.1) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(245,158,11,.07) 0%,transparent 55%)}
     body>*{position:relative;z-index:1}
-
     .toggle-wrap{position:fixed;top:14px;left:16px;z-index:100;display:flex;align-items:center;gap:8px}
     .ios-toggle{width:72px;height:34px;background:#1e2d45;border-radius:999px;border:1.5px solid rgba(255,255,255,.15);cursor:pointer;position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 8px;box-shadow:0 2px 12px rgba(0,0,0,.35);transition:background .4s,border-color .4s;overflow:hidden}
     .ios-toggle .icon-sun{font-size:.95rem;line-height:1;transition:opacity .3s;z-index:1}
@@ -24,7 +22,6 @@
     body:not(.light) .ios-toggle .icon-sun{opacity:.35} body:not(.light) .ios-toggle .icon-moon{opacity:1}
     .ios-knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#f59e0b;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .38s cubic-bezier(.34,1.56,.64,1);z-index:2}
     body.light .ios-knob{transform:translateX(38px)}
-
     header{text-align:center;padding:50px 20px 28px}
     header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(90deg,#00d4b4,#6366f1,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
     header p{color:var(--text-dim);font-weight:600;font-size:1rem;margin-bottom:6px}
@@ -34,11 +31,9 @@
     /* ══ PROGRESS DASHBOARD ══ */
     .progress-section{max-width:900px;margin:0 auto 32px;padding:0 20px}
     .progress-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px 24px;animation:fadeUp .4s ease both}
-
     .progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
-    .progress-title{font-weight:900;font-size:1rem;display:flex;align-items:center;gap:8px}
+    .progress-title{font-weight:900;font-size:1rem}
     .overall-badge{background:rgba(0,212,180,.12);border:1px solid rgba(0,212,180,.25);border-radius:999px;padding:4px 14px;font-size:.78rem;font-weight:800;color:var(--accent)}
-
     .progress-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
     .prog-item{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:12px 14px}
     .prog-item-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -46,24 +41,23 @@
     .prog-name{font-size:.8rem;font-weight:800;flex:1}
     .prog-score{font-size:.75rem;font-weight:700;color:var(--accent)}
     .prog-bar-wrap{height:6px;background:var(--border);border-radius:999px;overflow:hidden}
-    .prog-bar{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1);background:var(--accent)}
+    .prog-bar{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1);width:0%}
     .prog-bar.perfect{background:linear-gradient(90deg,#00d4b4,#6366f1)}
     .prog-bar.good{background:#00d4b4}
     .prog-bar.mid{background:#f59e0b}
     .prog-bar.low{background:#ef4444}
-    .prog-chapters{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
-    .ch-dot{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;color:var(--text-dim);transition:all .3s}
+    .prog-chapters{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+    .ch-dot{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;color:var(--text-dim)}
     .ch-dot.done{border-color:var(--accent);background:rgba(0,212,180,.15);color:var(--accent)}
-    .ch-dot.perfect-dot{border-color:#6366f1;background:rgba(99,102,241,.15);color:#818cf8}
-
+    .ch-dot.star{border-color:#6366f1;background:rgba(99,102,241,.15);color:#818cf8}
     .no-progress{text-align:center;padding:16px;color:var(--text-dim);font-size:.82rem;font-weight:600}
+    .reset-btn{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:var(--font);font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:999px;cursor:pointer;transition:all .2s}
+    .reset-btn:hover{border-color:#ef4444;color:#ef4444}
 
     .container{max-width:900px;margin:0 auto;padding:0 20px 60px}
-
     .subject{margin-bottom:28px;animation:fadeUp .5s ease both}
     .subject:nth-child(1){animation-delay:.1s}.subject:nth-child(2){animation-delay:.2s}.subject:nth-child(3){animation-delay:.3s}.subject:nth-child(4){animation-delay:.4s}.subject:nth-child(5){animation-delay:.5s}.subject:nth-child(6){animation-delay:.6s}
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-
     .subject-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-radius:16px 16px 0 0;color:#fff;font-weight:900;font-size:1.05rem;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s}
     .subject-header:hover{transform:translateY(-2px)}
     .subject-header::after{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(255,255,255,.1),transparent);pointer-events:none}
@@ -71,33 +65,24 @@
     .subject-header.open .arrow{transform:rotate(180deg)}
     .subject-icon{font-size:1.4rem}
     .subject-code{font-size:.72rem;opacity:.7;margin-right:4px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:999px}
-
     .chapters{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;padding:12px;overflow:hidden}
-    .chapters.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;animation:fadeUp .3s ease}
-
+    .chapters.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;animation:fadeUp .3s ease}
     .ch-link{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);font-weight:800;font-size:.9rem;transition:all .2s;position:relative;overflow:hidden}
     .ch-link:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--card-shadow)}
-    .ch-link.completed{border-color:rgba(0,212,180,.35)}
-    .ch-link.perfect{border-color:rgba(99,102,241,.4)}
+    .ch-link.completed{border-color:rgba(0,212,180,.4)}
+    .ch-link.perfect{border-color:rgba(99,102,241,.5)}
     .ch-link .ch-num{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:900;color:#fff;flex-shrink:0}
-    .ch-link .ch-text{display:flex;flex-direction:column;gap:2px}
+    .ch-link .ch-text{display:flex;flex-direction:column;gap:2px;flex:1}
     .ch-link .ch-title{font-size:.88rem;font-weight:800}
-    .ch-link .ch-sub{font-size:.72rem;color:var(--text-dim);font-weight:600}
-    .ch-link .ch-result{font-size:.7rem;font-weight:800;color:var(--accent);margin-top:2px}
-    .ch-link .ch-arrow{margin-right:auto;color:var(--text-dim);font-size:.9rem;transition:transform .2s;flex-shrink:0}
+    .ch-link .ch-result{font-size:.68rem;font-weight:700;color:var(--accent);margin-top:1px}
+    .ch-link .ch-arrow{color:var(--text-dim);font-size:.9rem;transition:transform .2s;flex-shrink:0}
     .ch-link:hover .ch-arrow{transform:translateX(-4px);color:var(--accent)}
-    .ch-link .ch-check{font-size:.85rem;flex-shrink:0}
-
-    .reset-btn{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:var(--font);font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:999px;cursor:pointer;transition:all .2s}
-    .reset-btn:hover{border-color:#ef4444;color:#ef4444}
-
     .footer{text-align:center;color:var(--text-dim);font-size:.82rem;padding:30px 20px;line-height:1.9}
     .signature{font-weight:900;color:var(--accent);font-size:.88rem;margin-bottom:2px}
-
     @media(max-width:500px){
       header h1{font-size:1.6rem}
       .subject-header{font-size:.92rem;padding:14px 16px}
-      .chapters.open{grid-template-columns:1fr}
+      .chapters.open{grid-template-columns:repeat(3,1fr)}
       .ch-link{padding:12px 14px}
       .progress-grid{grid-template-columns:1fr}
     }
@@ -114,13 +99,12 @@
     <div class="badge">🧠 اختبر نفسك — اسحب المصطلح لمكانه الصحيح</div>
   </header>
 
-  <!-- لوحة التقدم -->
   <div class="progress-section">
     <div class="progress-card">
       <div class="progress-header">
         <div class="progress-title">📊 تقدمك</div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <div class="overall-badge" id="overallBadge">جارٍ التحميل...</div>
+          <div class="overall-badge" id="overallBadge">—</div>
           <button class="reset-btn" onclick="resetProgress()">🗑️ إعادة تعيين</button>
         </div>
       </div>
@@ -139,154 +123,108 @@
   </div>
 
   <script>
-    let isLight = false;
-    function toggleTheme() { isLight = !isLight; document.body.classList.toggle("light", isLight); }
+    let isLight=false;
+    function toggleTheme(){isLight=!isLight;document.body.classList.toggle("light",isLight)}
 
-    const subjects = [
-      { folder:"mobile",  name:"تطبيقات الهواتف الذكية",        nameEn:"Mobile Applications",          code:"تال 1391", icon:"📱",  color:"#b45309",
-        chapters:[{file:"ch1.html",title:"Chapter 1"},{file:"ch2.html",title:"Chapter 2"}] },
-      { folder:"bigdata", name:"تحليل البيانات الضخمة",          nameEn:"Big Data Analytics",           code:"تال 1322", icon:"📊",  color:"#6366f1",
-        chapters:[{file:"ch1.html",title:"Chapter 1"},{file:"ch2.html",title:"Chapter 2"}] },
-      { folder:"iot",     name:"انترنت الأشياء",                 nameEn:"Internet of Things",           code:"تال 1441", icon:"🌐",  color:"#0369a1",
-        chapters:[{file:"ch1.html",title:"Chapter 1"},{file:"ch2.html",title:"Chapter 2"}] },
-      { folder:"cyber",   name:"مبادئ الأمن السيبراني",          nameEn:"Cybersecurity Principles",     code:"تال 1410", icon:"🔐",  color:"#be185d",
-        chapters:[{file:"ch1.html",title:"Chapter 1"},{file:"ch2.html",title:"Chapter 2"}] },
-      { folder:"netsec",  name:"أمن الشبكات وتقنيات التشفير",   nameEn:"Network Security & Cryptography",code:"تال 1413",icon:"🛡️", color:"#0d9488",
-        chapters:[{file:"ch1.html",title:"Chapter 1"},{file:"ch2.html",title:"Chapter 2"}] },
-      { folder:"systems", name:"عمارة وتقنية الأنظمة المتكاملة",nameEn:"Integrated Systems Architecture",code:"تال 1331",icon:"⚙️", color:"#15803d",
-        chapters:[{file:"ch1.html",title:"Chapter 1"},{file:"ch2.html",title:"Chapter 2"}] },
+    const subjects=[
+      {folder:"mobile", name:"تطبيقات الهواتف الذكية",         nameEn:"Mobile Applications",            code:"تال 1391",icon:"📱", color:"#b45309",
+       chapters:[{file:"ch1.html",title:"Ch 1"},{file:"ch2.html",title:"Ch 2"},{file:"ch3.html",title:"Ch 3"},{file:"ch4.html",title:"Ch 4"},{file:"ch5.html",title:"Ch 5"},{file:"ch6.html",title:"Ch 6"}]},
+      {folder:"bigdata",name:"تحليل البيانات الضخمة",           nameEn:"Big Data Analytics",             code:"تال 1322",icon:"📊", color:"#6366f1",
+       chapters:[{file:"ch1.html",title:"Ch 1"},{file:"ch2.html",title:"Ch 2"},{file:"ch3.html",title:"Ch 3"},{file:"ch4.html",title:"Ch 4"},{file:"ch5.html",title:"Ch 5"},{file:"ch6.html",title:"Ch 6"}]},
+      {folder:"iot",    name:"انترنت الأشياء",                  nameEn:"Internet of Things",             code:"تال 1441",icon:"🌐", color:"#0369a1",
+       chapters:[{file:"ch1.html",title:"Ch 1"},{file:"ch2.html",title:"Ch 2"},{file:"ch3.html",title:"Ch 3"},{file:"ch4.html",title:"Ch 4"},{file:"ch5.html",title:"Ch 5"},{file:"ch6.html",title:"Ch 6"}]},
+      {folder:"cyber",  name:"مبادئ الأمن السيبراني",           nameEn:"Cybersecurity Principles",       code:"تال 1410",icon:"🔐", color:"#be185d",
+       chapters:[{file:"ch1.html",title:"Ch 1"},{file:"ch2.html",title:"Ch 2"},{file:"ch3.html",title:"Ch 3"},{file:"ch4.html",title:"Ch 4"},{file:"ch5.html",title:"Ch 5"},{file:"ch6.html",title:"Ch 6"}]},
+      {folder:"netsec", name:"أمن الشبكات وتقنيات التشفير",    nameEn:"Network Security & Cryptography",code:"تال 1413",icon:"🛡️",color:"#0d9488",
+       chapters:[{file:"ch1.html",title:"Ch 1"},{file:"ch2.html",title:"Ch 2"},{file:"ch3.html",title:"Ch 3"},{file:"ch4.html",title:"Ch 4"},{file:"ch5.html",title:"Ch 5"},{file:"ch6.html",title:"Ch 6"}]},
+      {folder:"systems",name:"عمارة وتقنية الأنظمة المتكاملة", nameEn:"Integrated Systems Architecture",code:"تال 1331",icon:"⚙️",color:"#15803d",
+       chapters:[{file:"ch1.html",title:"Ch 1"},{file:"ch2.html",title:"Ch 2"},{file:"ch3.html",title:"Ch 3"},{file:"ch4.html",title:"Ch 4"},{file:"ch5.html",title:"Ch 5"},{file:"ch6.html",title:"Ch 6"}]},
     ];
 
-    /* ══ localStorage helpers ══ */
-    function getResult(folder, chFile) {
-      try {
-        const key = `quiz_${folder}_${chFile.replace('.html','')}`;
-        const raw = localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : null;
-      } catch(e) { return null; }
+    function getResult(folder,chFile){
+      try{
+        const raw=localStorage.getItem(`quiz_${folder}_${chFile.replace('.html','')}`);
+        return raw?JSON.parse(raw):null;
+      }catch(e){return null}
     }
 
-    function resetProgress() {
-      if (!confirm('هل تريد حذف جميع النتائج المحفوظة؟')) return;
-      subjects.forEach(s => s.chapters.forEach(ch => {
+    function resetProgress(){
+      if(!confirm('هل تريد حذف جميع النتائج المحفوظة؟'))return;
+      subjects.forEach(s=>s.chapters.forEach(ch=>{
         localStorage.removeItem(`quiz_${s.folder}_${ch.file.replace('.html','')}`);
       }));
       location.reload();
     }
 
-    /* ══ PROGRESS DASHBOARD ══ */
-    function renderProgress() {
-      const grid = document.getElementById('progressGrid');
-      const badge = document.getElementById('overallBadge');
+    function renderProgress(){
+      const grid=document.getElementById('progressGrid');
+      const badge=document.getElementById('overallBadge');
+      let totalDone=0,totalAll=0,hasAny=false,html='';
 
-      let totalDone = 0, totalAll = 0;
-      let hasAny = false;
-      let html = '';
-
-      subjects.forEach(subj => {
-        let subjDone = 0, subjTotal = 0, subjScoreSum = 0;
-        let dotsHtml = '';
-
-        subj.chapters.forEach((ch, i) => {
-          const res = getResult(subj.folder, ch.file);
-          subjTotal++;
+      subjects.forEach(subj=>{
+        let subjDone=0,scoreSum=0,dotsHtml='';
+        subj.chapters.forEach((ch,i)=>{
+          const res=getResult(subj.folder,ch.file);
           totalAll++;
-          if (res) {
-            hasAny = true;
-            subjDone++;
-            totalDone++;
-            subjScoreSum += (res.score / res.total) * 100;
-            const pct = Math.round((res.score / res.total) * 100);
-            const isPerfect = pct === 100;
-            dotsHtml += `<div class="ch-dot ${isPerfect ? 'perfect-dot' : 'done'}" title="${ch.title}: ${res.score}/${res.total}">${i+1}</div>`;
+          if(res){
+            hasAny=true;subjDone++;totalDone++;
+            scoreSum+=(res.score/res.total)*100;
+            const p=Math.round((res.score/res.total)*100);
+            dotsHtml+=`<div class="ch-dot ${p===100?'star':'done'}" title="${ch.title}: ${res.score}/${res.total}">${i+1}</div>`;
           } else {
-            dotsHtml += `<div class="ch-dot" title="${ch.title}: لم تُحل بعد">${i+1}</div>`;
+            dotsHtml+=`<div class="ch-dot" title="${ch.title}">${i+1}</div>`;
           }
         });
-
-        if (!hasAny && subjDone === 0) {
-          // will show no-progress
-        }
-
-        const pct = subjTotal > 0 ? Math.round((subjDone / subjTotal) * 100) : 0;
-        const avgScore = subjDone > 0 ? Math.round(subjScoreSum / subjDone) : 0;
-        const barClass = avgScore >= 90 ? 'perfect' : avgScore >= 70 ? 'good' : avgScore >= 50 ? 'mid' : 'low';
-
-        html += `
+        const pct=Math.round((subjDone/subj.chapters.length)*100);
+        const avg=subjDone>0?Math.round(scoreSum/subjDone):0;
+        const barClass=subjDone===0?'':avg>=90?'perfect':avg>=70?'good':avg>=50?'mid':'low';
+        html+=`
           <div class="prog-item">
             <div class="prog-item-top">
               <span class="prog-icon">${subj.icon}</span>
               <span class="prog-name">${subj.name}</span>
-              ${subjDone > 0 ? `<span class="prog-score">${avgScore}%</span>` : ''}
+              ${subjDone>0?`<span class="prog-score">${avg}%</span>`:''}
             </div>
-            <div class="prog-bar-wrap">
-              <div class="prog-bar ${barClass}" style="width:${pct}%"></div>
-            </div>
+            <div class="prog-bar-wrap"><div class="prog-bar ${barClass}" style="width:${pct}%"></div></div>
             <div class="prog-chapters">${dotsHtml}</div>
-          </div>
-        `;
+          </div>`;
       });
 
-      if (hasAny) {
-        grid.innerHTML = html;
-        const overallPct = Math.round((totalDone / totalAll) * 100);
-        badge.textContent = `✅ ${totalDone}/${totalAll} فصل — ${overallPct}%`;
+      if(hasAny){
+        grid.innerHTML=html;
+        badge.textContent=`✅ ${totalDone}/${totalAll} فصل — ${Math.round((totalDone/totalAll)*100)}%`;
       } else {
-        grid.innerHTML = '<div class="no-progress">ما حليت أي كويز بعد — ابدأ الآن! 🚀</div>';
-        badge.textContent = 'لا يوجد تقدم بعد';
+        grid.innerHTML='<div class="no-progress">ما حليت أي كويز بعد — ابدأ الآن! 🚀</div>';
+        badge.textContent='لا يوجد تقدم بعد';
       }
     }
 
-    /* ══ RENDER SUBJECTS ══ */
-    const container = document.getElementById("subjectsContainer");
-    subjects.forEach((subj, idx) => {
-      const div = document.createElement("div");
-      div.className = "subject";
+    const container=document.getElementById("subjectsContainer");
+    subjects.forEach((subj,idx)=>{
+      const div=document.createElement("div");div.className="subject";
+      const header=document.createElement("div");header.className="subject-header";header.style.background=subj.color;
+      header.innerHTML=`<span class="subject-icon">${subj.icon}</span> ${subj.name} <span class="subject-code">${subj.code}</span> <span class="arrow">▼</span>`;
+      const chaptersDiv=document.createElement("div");chaptersDiv.className="chapters";
 
-      const header = document.createElement("div");
-      header.className = "subject-header";
-      header.style.background = subj.color;
-      header.innerHTML = `<span class="subject-icon">${subj.icon}</span> ${subj.name} <span class="subject-code">${subj.code}</span> <span class="arrow">▼</span>`;
-
-      const chaptersDiv = document.createElement("div");
-      chaptersDiv.className = "chapters";
-
-      subj.chapters.forEach((ch, i) => {
-        const res = getResult(subj.folder, ch.file);
-        const a = document.createElement("a");
-        a.className = "ch-link" + (res ? (res.score === res.total ? " perfect" : " completed") : "");
-        a.href = `${subj.folder}/${ch.file}`;
-
-        let resultHtml = '';
-        let checkHtml = '<span class="ch-arrow">←</span>';
-        if (res) {
-          const pct = Math.round((res.score / res.total) * 100);
-          resultHtml = `<div class="ch-result">✅ ${res.score}/${res.total} — ${pct}% · ${res.date}</div>`;
-          checkHtml = `<span class="ch-check">${pct === 100 ? '⭐' : '✅'}</span>`;
-        }
-
-        a.innerHTML = `
-          <div class="ch-num" style="background:${subj.color}">${i + 1}</div>
+      subj.chapters.forEach((ch,i)=>{
+        const res=getResult(subj.folder,ch.file);
+        const pct=res?Math.round((res.score/res.total)*100):0;
+        const a=document.createElement("a");
+        a.className="ch-link"+(res?(pct===100?" perfect":" completed"):"");
+        a.href=`${subj.folder}/${ch.file}`;
+        a.innerHTML=`
+          <div class="ch-num" style="background:${subj.color}">${i+1}</div>
           <div class="ch-text">
             <div class="ch-title">${ch.title}</div>
-            <div class="ch-sub">${subj.nameEn}</div>
-            ${resultHtml}
+            ${res?`<div class="ch-result">${pct===100?'⭐':'✅'} ${res.score}/${res.total} · ${res.date}</div>`:''}
           </div>
-          ${checkHtml}
-        `;
+          <span class="ch-arrow">${res?(pct===100?'⭐':'✅'):'←'}</span>`;
         chaptersDiv.appendChild(a);
       });
 
-      header.addEventListener("click", () => {
-        header.classList.toggle("open");
-        chaptersDiv.classList.toggle("open");
-      });
-
-      if (idx === 0) { header.classList.add("open"); chaptersDiv.classList.add("open"); }
-
-      div.appendChild(header);
-      div.appendChild(chaptersDiv);
-      container.appendChild(div);
+      header.addEventListener("click",()=>{header.classList.toggle("open");chaptersDiv.classList.toggle("open")});
+      if(idx===0){header.classList.add("open");chaptersDiv.classList.add("open")}
+      div.appendChild(header);div.appendChild(chaptersDiv);container.appendChild(div);
     });
 
     renderProgress();
