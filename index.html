@@ -1,1764 +1,207 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>مراجعة – Introduction to Mobile Application Development</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-      :root {
-        --font: "Cairo", sans-serif;
-        --bg: #090e1a;
-        --bg2: #0f1829;
-        --surface: rgba(255, 255, 255, 0.04);
-        --surface-hi: rgba(255, 255, 255, 0.08);
-        --border: rgba(255, 255, 255, 0.1);
-        --border-hi: rgba(255, 255, 255, 0.2);
-        --text: #e8edf5;
-        --text-dim: rgba(232, 237, 245, 0.55);
-        --accent: #00d4b4;
-        --wrong: #f43f5e;
-        --glow: 0 0 30px rgba(0, 212, 180, 0.25);
-        --glow-green: 0 0 30px rgba(16, 185, 129, 0.4);
-        --r: 18px;
-        --hud-bg: rgba(9, 14, 26, 0.92);
-        --terms-bg: rgba(9, 14, 26, 0.94);
-        --score-bg: linear-gradient(135deg, #0f1829, #1a2540);
-        --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        --tbl-border: rgba(255, 255, 255, 0.08);
-        --th-bg: rgba(255, 255, 255, 0.05);
-        --td-bg: rgba(255, 255, 255, 0.02);
-      }
-      body.light {
-        --bg: #fdf6ec;
-        --bg2: #fffaf4;
-        --surface: rgba(180, 120, 60, 0.05);
-        --surface-hi: rgba(180, 120, 60, 0.09);
-        --border: rgba(180, 120, 60, 0.14);
-        --border-hi: rgba(180, 120, 60, 0.28);
-        --text: #2d2013;
-        --text-dim: rgba(45, 32, 19, 0.52);
-        --accent: #0d9488;
-        --glow: 0 0 24px rgba(13, 148, 136, 0.18);
-        --glow-green: 0 0 18px rgba(16, 185, 129, 0.22);
-        --hud-bg: rgba(253, 246, 236, 0.96);
-        --terms-bg: rgba(253, 246, 236, 0.97);
-        --score-bg: linear-gradient(135deg, #2d2013, #5a3e1b);
-        --card-shadow: 0 4px 16px rgba(120, 80, 20, 0.1);
-        --tbl-border: rgba(180, 120, 60, 0.12);
-        --th-bg: rgba(180, 120, 60, 0.07);
-        --td-bg: rgba(180, 120, 60, 0.03);
-      }
-      body.light::before {
-        background-image:
-          radial-gradient(
-            ellipse 80% 50% at 20% 10%,
-            rgba(255, 200, 100, 0.1) 0%,
-            transparent 60%
-          ),
-          radial-gradient(
-            ellipse 60% 40% at 80% 80%,
-            rgba(245, 158, 11, 0.07) 0%,
-            transparent 55%
-          ),
-          radial-gradient(
-            ellipse 40% 30% at 50% 50%,
-            rgba(255, 220, 130, 0.05) 0%,
-            transparent 50%
-          );
-      }
-      body.light header {
-        background: linear-gradient(
-          160deg,
-          rgba(245, 158, 11, 0.12) 0%,
-          rgba(13, 148, 136, 0.08) 100%
-        );
-      }
-      body.light .neuro-tip {
-        background: rgba(13, 148, 136, 0.08);
-        border-color: rgba(13, 148, 136, 0.22);
-        color: #0d7a6e;
-      }
-      body.light .focus-banner {
-        background: linear-gradient(
-          135deg,
-          rgba(245, 158, 11, 0.08),
-          rgba(13, 148, 136, 0.08)
-        );
-        border-color: rgba(245, 158, 11, 0.22);
-        color: #92580a;
-      }
-      body.light .zone {
-        border-color: rgba(180, 120, 60, 0.2);
-      }
-      body.light .ar {
-        border-right-color: rgba(180, 120, 60, 0.18);
-        background: rgba(255, 220, 130, 0.06);
-      }
-      body.light .details-block {
-        background: rgba(13, 148, 136, 0.05);
-        border-color: rgba(13, 148, 136, 0.18);
-      }
-      body.light .hint {
-        background: rgba(99, 102, 241, 0.06);
-        border-color: rgba(99, 102, 241, 0.18);
-      }
-      body.light .btn-answer {
-        background: #fffaf4;
-        color: var(--text);
-        border-color: rgba(180, 120, 60, 0.22);
-      }
-      body.light .box {
-        background: #fffaf4;
-        border-color: rgba(180, 120, 60, 0.14);
-        box-shadow: 0 4px 20px rgba(120, 80, 20, 0.08);
-      }
-      body.light .en {
-        color: #2d2013;
-      }
-      body.light .enCell {
-        color: #2d2013;
-      }
-      body.light .hud-item {
-        background: #fffaf4;
-        border-color: rgba(180, 120, 60, 0.18);
-      }
-      body.light .results-card {
-        background: #fffaf4;
-        box-shadow: 0 12px 40px rgba(120, 80, 20, 0.12);
-      }
-      body.light .stat-box {
-        background: rgba(255, 220, 130, 0.1);
-        border-color: rgba(180, 120, 60, 0.15);
-      }
-      body.light .perf-bar-bg {
-        background: rgba(180, 120, 60, 0.12);
-      }
-      body.light #resultsScreen {
-        background: rgba(250, 240, 225, 0.94);
-      }
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>كويزات المراجعة — بدر الدوسري</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--font:"Cairo",sans-serif;--bg:#090e1a;--bg2:#0f1829;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.1);--border-hi:rgba(255,255,255,.2);--text:#e8edf5;--text-dim:rgba(232,237,245,.55);--accent:#00d4b4;--card-shadow:0 8px 24px rgba(0,0,0,.3)}
+    body.light{--bg:#fdf6ec;--bg2:#fffaf4;--surface:rgba(180,120,60,.05);--border:rgba(180,120,60,.14);--border-hi:rgba(180,120,60,.28);--text:#2d2013;--text-dim:rgba(45,32,19,.52);--accent:#0d9488;--card-shadow:0 4px 16px rgba(120,80,20,.1)}
 
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        background: var(--bg);
-        font-family: var(--font);
-        color: var(--text);
-        min-height: 100vh;
-        overflow-x: hidden;
-        transition:
-          background 0.45s,
-          color 0.45s;
-      }
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image:
-          radial-gradient(
-            ellipse 80% 50% at 20% 10%,
-            rgba(0, 212, 180, 0.07) 0%,
-            transparent 60%
-          ),
-          radial-gradient(
-            ellipse 60% 40% at 80% 80%,
-            rgba(99, 102, 241, 0.06) 0%,
-            transparent 55%
-          ),
-          radial-gradient(
-            ellipse 40% 30% at 50% 50%,
-            rgba(245, 158, 11, 0.04) 0%,
-            transparent 50%
-          );
-        pointer-events: none;
-        z-index: 0;
-        transition: background-image 0.45s;
-      }
-      body > * {
-        position: relative;
-        z-index: 1;
-      }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .45s,color .45s}
+    body::before{content:"";position:fixed;inset:0;background-image:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(0,212,180,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(99,102,241,.06) 0%,transparent 55%);pointer-events:none;z-index:0}
+    body.light::before{background-image:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(255,200,100,.1) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(245,158,11,.07) 0%,transparent 55%)}
+    body>*{position:relative;z-index:1}
 
-      .toggle-wrap {
-        position: fixed;
-        top: 14px;
-        left: 16px;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-      }
-      .ios-toggle {
-        width: 72px;
-        height: 34px;
-        background: #1e2d45;
-        border-radius: 999px;
-        border: 1.5px solid rgba(255, 255, 255, 0.15);
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 8px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-        transition:
-          background 0.4s,
-          border-color 0.4s;
-      }
-      body.light .ios-toggle {
-        background: #e8d5b0;
-        border-color: rgba(180, 120, 60, 0.3);
-        box-shadow: 0 2px 12px rgba(120, 80, 20, 0.18);
-      }
-      .ios-toggle .icon-sun {
-        font-size: 0.95rem;
-        line-height: 1;
-        transition: opacity 0.3s;
-      }
-      .ios-toggle .icon-moon {
-        font-size: 0.85rem;
-        line-height: 1;
-        transition: opacity 0.3s;
-      }
-      body.light .ios-toggle .icon-sun {
-        opacity: 1;
-      }
-      body.light .ios-toggle .icon-moon {
-        opacity: 0.35;
-      }
-      body:not(.light) .ios-toggle .icon-sun {
-        opacity: 0.35;
-      }
-      body:not(.light) .ios-toggle .icon-moon {
-        opacity: 1;
-      }
-      .ios-knob {
-        position: absolute;
-        top: 3px;
-        left: 3px;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: #f59e0b;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        transition:
-          transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
-          background 0.38s;
-      }
-      body.light .ios-knob {
-        transform: translateX(38px);
-      }
+    .toggle-wrap{position:fixed;top:14px;left:16px;z-index:100;display:flex;align-items:center;gap:8px}
+    .ios-toggle{width:72px;height:34px;background:#1e2d45;border-radius:999px;border:1.5px solid rgba(255,255,255,.15);cursor:pointer;position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 8px;box-shadow:0 2px 12px rgba(0,0,0,.35);transition:background .4s,border-color .4s;overflow:hidden}
+    .ios-toggle .icon-sun{font-size:.95rem;line-height:1;transition:opacity .3s;z-index:1}
+    .ios-toggle .icon-moon{font-size:.85rem;line-height:1;transition:opacity .3s;z-index:1}
+    body.light .ios-toggle{background:#e8d5b0;border-color:rgba(180,120,60,.3)}
+    body.light .ios-toggle .icon-sun{opacity:1} body.light .ios-toggle .icon-moon{opacity:.35}
+    body:not(.light) .ios-toggle .icon-sun{opacity:.35} body:not(.light) .ios-toggle .icon-moon{opacity:1}
+    .ios-knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#f59e0b;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .38s cubic-bezier(.34,1.56,.64,1);z-index:2}
+    body.light .ios-knob{transform:translateX(38px)}
 
-      .toast {
-        position: fixed;
-        top: 60px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-8px);
-        background: var(--bg2);
-        border: 1px solid var(--border-hi);
-        color: var(--text);
-        padding: 9px 22px;
-        border-radius: 999px;
-        font-family: var(--font);
-        font-weight: 800;
-        font-size: 0.88rem;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        z-index: 999;
-        opacity: 0;
-        pointer-events: none;
-        transition:
-          opacity 0.3s,
-          transform 0.3s;
-        white-space: nowrap;
-      }
-      .toast.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
+    header{text-align:center;padding:50px 20px 40px}
+    header h1{font-size:2.2rem;font-weight:900;background:linear-gradient(90deg,#00d4b4,#6366f1,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+    header p{color:var(--text-dim);font-weight:600;font-size:1rem;margin-bottom:6px}
+    .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,180,.1);border:1px solid rgba(0,212,180,.25);padding:5px 16px;border-radius:999px;font-size:.82rem;font-weight:700;color:#7ee8da;margin-top:12px}
+    body.light .badge{background:rgba(13,148,136,.08);border-color:rgba(13,148,136,.22);color:#0d7a6e}
 
-      header {
-        text-align: center;
-        padding: 28px 20px 22px;
-        background: linear-gradient(
-          160deg,
-          rgba(0, 212, 180, 0.12) 0%,
-          rgba(99, 102, 241, 0.08) 100%
-        );
-        border-bottom: 1px solid var(--border);
-        backdrop-filter: blur(12px);
-        transition: background 0.45s;
-      }
-      header h1 {
-        font-size: 1.75rem;
-        font-weight: 900;
-        background: linear-gradient(90deg, #00d4b4, #6366f1, #f59e0b);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-      }
-      header p {
-        color: var(--text-dim);
-        font-weight: 600;
-        font-size: 0.95rem;
-        margin: 6px 0 14px;
-      }
-      .neuro-tip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(0, 212, 180, 0.1);
-        border: 1px solid rgba(0, 212, 180, 0.25);
-        padding: 5px 16px;
-        border-radius: 999px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: #7ee8da;
-        margin: 0 auto 14px;
-        transition:
-          background 0.3s,
-          color 0.3s,
-          border-color 0.3s;
-      }
-      .progress {
-        height: 6px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 999px;
-        overflow: hidden;
-        max-width: 440px;
-        margin: 0 auto;
-      }
-      body.light .progress {
-        background: rgba(180, 120, 60, 0.12);
-      }
-      #bar {
-        height: 100%;
-        width: 0;
-        background: linear-gradient(90deg, #00d4b4, #6366f1, #f59e0b);
-        border-radius: 999px;
-        transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 0 10px rgba(0, 212, 180, 0.5);
-      }
+    .container{max-width:900px;margin:0 auto;padding:0 20px 60px}
 
-      .hud {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        padding: 10px 16px;
-        background: var(--hud-bg);
-        backdrop-filter: blur(16px);
-        position: sticky;
-        top: 0;
-        z-index: 25;
-        border-bottom: 1px solid var(--border);
-        transition: background 0.45s;
-      }
-      .hud-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 14px;
-        border-radius: 10px;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        font-weight: 800;
-        font-size: 0.88rem;
-        transition:
-          background 0.3s,
-          border-color 0.3s;
-      }
-      .hud-time {
-        border-color: rgba(244, 63, 94, 0.3);
-      }
-      .hud-acc {
-        border-color: rgba(0, 212, 180, 0.3);
-      }
-      .hud-streak {
-        border-color: rgba(245, 158, 11, 0.3);
-      }
-      #timer {
-        color: #f87171;
-      }
-      #accuracy {
-        color: #5eead4;
-      }
-      #streak {
-        color: #fbbf24;
-      }
-      body.light #accuracy {
-        color: #0d9488;
-      }
+    .subject{margin-bottom:28px;animation:fadeUp .5s ease both}
+    .subject:nth-child(1){animation-delay:.1s}
+    .subject:nth-child(2){animation-delay:.2s}
+    .subject:nth-child(3){animation-delay:.3s}
+    .subject:nth-child(4){animation-delay:.4s}
+    .subject:nth-child(5){animation-delay:.5s}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-      .terms {
-        position: sticky;
-        top: 52px;
-        background: var(--terms-bg);
-        backdrop-filter: blur(16px);
-        padding: 12px 14px;
-        z-index: 20;
-        border-bottom: 1px solid var(--border);
-        transition: background 0.45s;
-      }
-      .terms p {
-        text-align: center;
-        color: var(--text-dim);
-        margin: 0 0 10px;
-        font-weight: 700;
-        font-size: 0.88rem;
-      }
-      #termsBox {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 9px;
-        justify-content: center;
-        max-height: 24vh;
-        overflow-y: auto;
-        padding-bottom: 4px;
-      }
-      .pill {
-        padding: 9px 20px;
-        border-radius: 999px;
-        color: #fff;
-        font-weight: 800;
-        font-size: 0.88rem;
-        cursor: grab;
-        border: 1.5px solid rgba(255, 255, 255, 0.25);
-        box-shadow:
-          0 4px 14px rgba(0, 0, 0, 0.35),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        user-select: none;
-        transition:
-          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-          box-shadow 0.2s,
-          opacity 0.2s;
-      }
-      .pill:hover {
-        transform: translateY(-4px) scale(1.04);
-      }
-      .pill:active {
-        cursor: grabbing;
-        transform: scale(0.93);
-      }
-      @keyframes breathe {
-        0%,
-        100% {
-          box-shadow:
-            0 4px 14px rgba(0, 0, 0, 0.3),
-            0 0 0 0 rgba(0, 212, 180, 0);
-        }
-        50% {
-          box-shadow:
-            0 4px 14px rgba(0, 0, 0, 0.3),
-            0 0 12px 4px rgba(0, 212, 180, 0.18);
-        }
-      }
-      .pill:not(:active) {
-        animation: breathe 3.5s ease-in-out infinite;
-      }
+    .subject-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-radius:16px 16px 0 0;color:#fff;font-weight:900;font-size:1.1rem;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s}
+    .subject-header:hover{transform:translateY(-2px)}
+    .subject-header::after{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(255,255,255,.1),transparent);pointer-events:none}
+    .subject-header .arrow{margin-right:auto;font-size:1.2rem;transition:transform .3s;flex-shrink:0}
+    .subject-header.open .arrow{transform:rotate(180deg)}
+    .subject-icon{font-size:1.4rem}
 
-      .main {
-        max-width: 1140px;
-        margin: 28px auto 100px;
-        padding: 0 16px;
-      }
-      .focus-banner {
-        background: linear-gradient(
-          135deg,
-          rgba(0, 212, 180, 0.1),
-          rgba(99, 102, 241, 0.1)
-        );
-        border: 1px solid rgba(0, 212, 180, 0.2);
-        border-radius: 12px;
-        padding: 12px 18px;
-        text-align: center;
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: #7ee8da;
-        margin: 0 0 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        transition:
-          background 0.3s,
-          color 0.3s,
-          border-color 0.3s;
-      }
-      .chapter {
-        display: none;
-      }
-      .chapter.active {
-        display: block;
-        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      @keyframes slideUp {
-        from {
-          opacity: 0;
-          transform: translateY(24px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .ch-header {
-        padding: 16px 20px;
-        color: #fff;
-        font-weight: 900;
-        font-size: 1.1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-radius: var(--r) var(--r) 0 0;
-        position: relative;
-        overflow: hidden;
-      }
-      .ch-header::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to left,
-          rgba(255, 255, 255, 0.1),
-          transparent
-        );
-        pointer-events: none;
-      }
-      .ch-badge {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 3px 12px;
-        border-radius: 999px;
-        font-size: 0.82rem;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
-        gap: 16px;
-        padding: 18px;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-top: none;
-        border-radius: 0 0 var(--r) var(--r);
-      }
-      .card {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        transition:
-          border-color 0.3s,
-          box-shadow 0.3s,
-          transform 0.2s,
-          background 0.3s;
-      }
-      .card:hover {
-        border-color: var(--border-hi);
-        box-shadow: var(--card-shadow);
-        transform: translateY(-2px);
-      }
-      .card-stripe {
-        height: 3px;
-        border-radius: 999px;
-        margin-bottom: 4px;
-        opacity: 0.8;
-      }
-      .en {
-        direction: ltr;
-        font-weight: 800;
-        font-size: 0.96rem;
-        color: #c7d2e7;
-        line-height: 1.55;
-        transition: color 0.3s;
-      }
-      .ar {
-        font-size: 0.88rem;
-        color: var(--text-dim);
-        line-height: 1.65;
-        font-weight: 600;
-        padding: 8px 10px;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 8px;
-        border-right: 2px solid rgba(255, 255, 255, 0.1);
-        text-align: right;
-        transition:
-          background 0.3s,
-          border-color 0.3s;
-      }
+    .chapters{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;padding:12px;overflow:hidden}
+    .chapters.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;animation:fadeUp .3s ease}
 
-      /* ══ DETAILS BLOCK ══ */
-      .details-block {
-        background: rgba(0, 212, 180, 0.05);
-        border: 1px solid rgba(0, 212, 180, 0.15);
-        border-radius: 8px;
-        padding: 8px 12px;
-      }
-      .slide-ref {
-        font-size: 0.72rem;
-        font-weight: 900;
-        color: var(--accent);
-        margin-bottom: 5px;
-        letter-spacing: 0.03em;
-      }
-      .details-text {
-        font-size: 0.8rem;
-        color: var(--text-dim);
-        line-height: 1.75;
-        font-weight: 600;
-        text-align: right;
-      }
+    .ch-link{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);font-weight:800;font-size:.9rem;transition:all .2s;position:relative;overflow:hidden}
+    .ch-link:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--card-shadow)}
+    .ch-link .ch-num{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:900;color:#fff;flex-shrink:0}
+    .ch-link .ch-text{display:flex;flex-direction:column;gap:2px}
+    .ch-link .ch-title{font-size:.88rem;font-weight:800}
+    .ch-link .ch-sub{font-size:.72rem;color:var(--text-dim);font-weight:600}
+    .ch-link .ch-arrow{margin-right:auto;color:var(--text-dim);font-size:.9rem;transition:transform .2s}
+    .ch-link:hover .ch-arrow{transform:translateX(-4px);color:var(--accent)}
 
-      .zone {
-        margin-top: auto;
-        border: 2px dashed rgba(255, 255, 255, 0.18);
-        border-radius: 10px;
-        height: 52px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.9rem;
-        font-weight: 800;
-        color: var(--text-dim);
-        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .zone.hover {
-        background: rgba(0, 212, 180, 0.08);
-        border-color: var(--accent);
-        border-style: solid;
-        color: var(--accent);
-        transform: scale(1.03);
-        box-shadow: var(--glow);
-      }
-      .zone.correct {
-        color: #fff;
-        font-weight: 900;
-        border-style: solid;
-        box-shadow: var(--glow-green);
-        animation: popIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
+    .empty-msg{text-align:center;padding:20px;color:var(--text-dim);font-size:.85rem;font-weight:700}
 
-      @keyframes popIn {
-        0% {
-          transform: scale(0.7);
-          opacity: 0;
-        }
-        60% {
-          transform: scale(1.1);
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      .zone.wrong {
-        background: rgba(244, 63, 94, 0.12);
-        border-color: var(--wrong);
-        border-style: solid;
-        color: var(--wrong);
-        animation: shake 0.4s;
-      }
-      @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-        20%,
-        60% {
-          transform: translateX(-7px);
-        }
-        40%,
-        80% {
-          transform: translateX(7px);
-        }
-      }
-      .hint {
-        font-size: 0.82rem;
-        color: #a78bfa;
-        text-align: right;
-        margin-top: 6px;
-        font-weight: 700;
-        display: none;
-        background: rgba(99, 102, 241, 0.1);
-        border: 1px solid rgba(99, 102, 241, 0.25);
-        padding: 8px 10px;
-        border-radius: 8px;
-        line-height: 1.5;
-      }
+    .footer{text-align:center;color:var(--text-dim);font-size:.82rem;padding:30px 20px;line-height:1.9}
+    .signature{font-weight:900;color:var(--accent);font-size:.88rem;margin-bottom:2px}
 
-      .controls {
-        text-align: center;
-        margin: 22px 0;
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-      .btn {
-        padding: 12px 26px;
-        border-radius: 999px;
-        border: none;
-        font-family: var(--font);
-        font-weight: 900;
-        font-size: 1rem;
-        cursor: pointer;
-        transition:
-          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-          box-shadow 0.2s;
-      }
-      .btn:hover {
-        transform: translateY(-3px);
-      }
-      .btn:active {
-        transform: translateY(1px) scale(0.97);
-      }
-      .btn-next {
-        background: linear-gradient(135deg, #f59e0b, #ef4444);
-        color: #fff;
-        display: none;
-        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
-      }
-      .btn-answer {
-        background: var(--surface-hi);
-        color: var(--text);
-        border: 1px solid var(--border-hi);
-      }
-      .reset {
-        background: linear-gradient(135deg, #10b981, #3b82f6);
-        color: #fff;
-        display: none;
-        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
-      }
+    @media(max-width:500px){
+      header h1{font-size:1.6rem}
+      .chapters.open{grid-template-columns:1fr}
+      .ch-link{padding:12px 14px}
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-wrap">
+    <div class="ios-toggle" onclick="toggleTheme()"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span><div class="ios-knob"></div></div>
+  </div>
 
-      .answer {
-        max-width: 1140px;
-        margin: 0 auto 40px;
-        padding: 0 16px;
-      }
-      #answers {
-        display: none;
-      }
-      .box {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: var(--r);
-        padding: 24px;
-        box-shadow: var(--card-shadow);
-        transition:
-          background 0.3s,
-          border-color 0.3s,
-          box-shadow 0.3s;
-      }
-      .box h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 1.1rem;
-        color: var(--accent);
-      }
-      .ch-title {
-        color: #fff;
-        font-weight: 900;
-        padding: 8px 16px;
-        border-radius: 8px;
-        margin: 18px 0 10px;
-        font-size: 0.95rem;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 4px;
-      }
-      th {
-        background: var(--th-bg);
-        color: var(--accent);
-        font-size: 0.8rem;
-        padding: 8px 12px;
-        border: 1px solid var(--tbl-border);
-        text-align: right;
-        font-weight: 800;
-      }
-      td {
-        padding: 10px 12px;
-        border: 1px solid var(--tbl-border);
-        font-size: 0.83rem;
-        color: var(--text-dim);
-        vertical-align: top;
-        background: var(--td-bg);
-        text-align: right;
-        transition: background 0.3s;
-      }
-      .enCell {
-        direction: ltr;
-        text-align: left;
-        color: #c7d2e7;
-        font-size: 0.82rem;
-      }
-      body.light .enCell {
-        color: #2d2013;
-      }
-      tr:hover td {
-        background: var(--surface-hi);
-      }
-      .slide-cell {
-        text-align: center;
-        color: var(--accent);
-        font-weight: 900;
-        white-space: nowrap;
-        font-size: 0.8rem;
-      }
-      .details-cell {
-        font-size: 0.79rem;
-        line-height: 1.7;
-      }
+  <header>
+    <h1>🎓 كويزات المراجعة</h1>
+    <p>مراجعة تفاعلية للمواد الجامعية</p>
+    <div class="badge">🧠 اختبر نفسك — اسحب المصطلح لمكانه الصحيح</div>
+  </header>
 
-      .score {
-        position: fixed;
-        bottom: 22px;
-        right: 22px;
-        background: var(--score-bg);
-        border: 1px solid var(--border-hi);
-        padding: 7px 22px;
-        border-radius: 999px;
-        font-weight: 900;
-        font-size: 1rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-        z-index: 28;
-        color: var(--text);
-        pointer-events: none;
-        transition: background 0.45s;
-      }
-      .score.pop {
-        animation: scorePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      @keyframes scorePop {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.22);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
+  <div class="container" id="subjectsContainer"></div>
 
-      .footer {
-        text-align: center;
-        color: var(--text-dim);
-        font-size: 0.82rem;
-        padding: 30px 20px;
-        line-height: 1.9;
-      }
-      .signature {
-        font-weight: 900;
-        color: var(--accent);
-        font-size: 0.88rem;
-        margin-bottom: 2px;
-      }
+  <div class="footer">
+    <div class="signature">🎓 إعداد: بدر الدوسري</div>
+    <div style="font-style:italic">دعواتكم الصالحة في ظهر الغيب 🤲</div>
+    <div style="margin-top:10px;font-size:.8rem">جامعة الإمام محمد بن سعود الإسلامية</div>
+  </div>
 
-      #resultsScreen {
-        position: fixed;
-        inset: 0;
-        background: rgba(9, 14, 26, 0.92);
-        backdrop-filter: blur(18px);
-        z-index: 200;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s;
-      }
-      #resultsScreen.show {
-        opacity: 1;
-        pointer-events: auto;
-      }
-      .results-card {
-        background: var(--bg2);
-        border-radius: 24px;
-        padding: 36px 32px;
-        max-width: 520px;
-        width: 100%;
-        text-align: center;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        border: 1px solid var(--border-hi);
-        transition: background 0.3s;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-      .results-grade {
-        font-size: 3.5rem;
-        margin-bottom: 12px;
-      }
-      .results-card h2 {
-        font-size: 1.4rem;
-        margin-bottom: 6px;
-      }
-      .results-subtitle {
-        color: var(--text-dim);
-        font-size: 0.9rem;
-        margin-bottom: 22px;
-      }
-      .results-stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 20px;
-      }
-      .stat-box {
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 12px;
-        padding: 14px 10px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .stat-num {
-        font-size: 1.6rem;
-        font-weight: 900;
-        margin-bottom: 4px;
-      }
-      .stat-perfect {
-        color: #10b981;
-      }
-      .stat-review {
-        color: #f59e0b;
-      }
-      .stat-time {
-        color: #60a5fa;
-      }
-      .stat-acc {
-        color: var(--accent);
-      }
-      .stat-label {
-        font-size: 0.78rem;
-        color: var(--text-dim);
-        font-weight: 700;
-      }
-      .perf-bar-wrap {
-        margin: 0 0 18px;
-      }
-      .perf-bar-label {
-        font-size: 0.8rem;
-        color: var(--text-dim);
-        margin-bottom: 6px;
-        font-weight: 700;
-      }
-      .perf-bar-bg {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 999px;
-        height: 10px;
-        overflow: hidden;
-      }
-      .perf-bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #00d4b4, #6366f1);
-        border-radius: 999px;
-        transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .weak-terms {
-        background: rgba(244, 63, 94, 0.07);
-        border: 1px solid rgba(244, 63, 94, 0.2);
-        border-radius: 12px;
-        padding: 14px 16px;
-        margin-bottom: 16px;
-        text-align: right;
-      }
-      .weak-terms h4 {
-        font-size: 0.85rem;
-        color: #f87171;
-        margin-bottom: 10px;
-        font-weight: 800;
-      }
-      #weakList {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-      }
-      .weak-pill {
-        padding: 5px 14px;
-        border-radius: 999px;
-        color: #fff;
-        font-size: 0.78rem;
-        font-weight: 800;
-      }
-      .no-weak {
-        color: #10b981;
-        font-weight: 800;
-        font-size: 0.88rem;
-      }
-      .results-msg {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--accent);
-        margin-bottom: 20px;
-        line-height: 1.6;
-      }
-      .results-btns {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      .btn-close-results {
-        padding: 10px 24px;
-        border-radius: 10px;
-        font-family: var(--font);
-        font-weight: 800;
-        font-size: 0.9rem;
-        cursor: pointer;
-        background: transparent;
-        color: var(--text);
-        border: 1.5px solid var(--border-hi);
-        transition: all 0.25s;
-      }
-      .btn-retry-results {
-        padding: 10px 24px;
-        border-radius: 10px;
-        font-family: var(--font);
-        font-weight: 800;
-        font-size: 0.9rem;
-        cursor: pointer;
-        background: var(--accent);
-        color: #000;
-        border: none;
-        transition: all 0.25s;
-      }
-      .btn-close-results:hover,
-      .btn-retry-results:hover {
-        transform: translateY(-2px);
-      }
+  <script>
+    /* ══ THEME ══ */
+    let isLight = false;
+    function toggleTheme() {
+      isLight = !isLight;
+      document.body.classList.toggle("light", isLight);
+    }
 
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 999px;
-      }
-      body.light ::-webkit-scrollbar-thumb {
-        background: rgba(180, 120, 60, 0.2);
-      }
-      @media (max-width: 500px) {
-        header h1 {
-          font-size: 1.3rem;
-        }
-        .hud {
-          gap: 7px;
-        }
-        .hud-item {
-          padding: 5px 9px;
-          font-size: 0.78rem;
-        }
-        .results-card {
-          padding: 24px 18px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="toast" id="toast"></div>
+    /* ══════════════════════════════════════════
+       📚 المواد والشابترات
+       ════════════════════════════════════════
+       عدّل هنا فقط — أضف مواد وشابترات جديدة
+       
+       folder: اسم الفولدر بالإنجليزي (اللي بـ GitHub)
+       name: اسم المادة بالعربي
+       icon: إيموجي المادة
+       color: لون المادة
+       chapters: قائمة الشابترات
+         - file: اسم ملف الـ HTML
+         - title: عنوان الشابتر
+         - sub: وصف قصير (اختياري)
+    ══════════════════════════════════════════ */
+    const subjects = [
+      {
+        folder: "security",
+        name: "أمن الشبكات",
+        icon: "🛡️",
+        color: "#0d9488",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "Introduction to Security" },
+          { file: "ch2.html", title: "Chapter 2", sub: "Threats & Attacks" },
+        ]
+      },
+      {
+        folder: "data",
+        name: "تحليل البيانات",
+        icon: "📊",
+        color: "#6366f1",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "Data Basics" },
+        ]
+      },
+      {
+        folder: "mobile",
+        name: "تطبيق الهواتف",
+        icon: "📱",
+        color: "#b45309",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "Mobile Development" },
+        ]
+      },
+      {
+        folder: "cyber",
+        name: "مبادئ أمن سيبراني",
+        icon: "🔐",
+        color: "#be185d",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "Cyber Security Basics" },
+        ]
+      },
+    ];
 
-    <div class="toggle-wrap">
-      <div
-        class="ios-toggle"
-        id="iosToggle"
-        onclick="toggleTheme()"
-        title="تبديل الوضع"
-      >
-        <span class="icon-sun">☀️</span>
-        <span class="icon-moon">🌙</span>
-        <div class="ios-knob"></div>
-      </div>
-    </div>
+    /* ══ RENDER ══ */
+    const container = document.getElementById("subjectsContainer");
 
-    <div id="resultsScreen">
-      <div class="results-card">
-        <div class="results-grade" id="resGrade">🏆</div>
-        <h2>نتيجتك النهائية</h2>
-        <div class="results-subtitle" id="resSubtitle"></div>
-        <div class="results-stats">
-          <div class="stat-box">
-            <div class="stat-num stat-perfect" id="resPerfect">0</div>
-            <div class="stat-label">✅ من أول محاولة</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num stat-review" id="resReview">0</div>
-            <div class="stat-label">⚠️ احتاجت مراجعة</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num stat-time" id="resTime">00:00</div>
-            <div class="stat-label">⏱️ الوقت الكلي</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num stat-acc" id="resAcc">100%</div>
-            <div class="stat-label">🎯 دقة الذاكرة</div>
-          </div>
-        </div>
-        <div class="perf-bar-wrap">
-          <div class="perf-bar-label">مستوى الإتقان</div>
-          <div class="perf-bar-bg">
-            <div class="perf-bar-fill" id="perfBar" style="width: 0%"></div>
-          </div>
-        </div>
-        <div class="weak-terms" id="weakBox">
-          <h4>🔁 راجع هذه المصطلحات مرة أخرى:</h4>
-          <div id="weakList"></div>
-        </div>
-        <div class="results-msg" id="resMsg"></div>
-        <div class="results-btns">
-          <button class="btn-close-results" onclick="closeResults()">
-            📖 راجع الإجابات
-          </button>
-          <button class="btn-retry-results" onclick="location.reload()">
-            🔄 تجربة جديدة
-          </button>
-        </div>
-      </div>
-    </div>
+    subjects.forEach((subj, idx) => {
+      const div = document.createElement("div");
+      div.className = "subject";
 
-    <header>
-      <h1>📱 Introduction to Mobile Application Development – Chapter 1</h1>
-      <p>علم الأعصاب التعليمي — مراجعة تفاعلية</p>
-      <div class="neuro-tip">🧠 تذكّر الإجابة في ذهنك أولاً ثم اسحب</div>
-      <div class="progress"><div id="bar"></div></div>
-    </header>
+      const header = document.createElement("div");
+      header.className = "subject-header";
+      header.style.background = subj.color;
+      header.innerHTML = `<span class="subject-icon">${subj.icon}</span> ${subj.name} <span style="font-size:.78rem;opacity:.7;margin-right:6px">(${subj.chapters.length} شابتر)</span> <span class="arrow">▼</span>`;
 
-    <div class="hud">
-      <div class="hud-item hud-time">⏱️ <span id="timer">00:00</span></div>
-      <div class="hud-item hud-acc">
-        🎯 دقة الذاكرة: <span id="accuracy">100%</span>
-      </div>
-      <div class="hud-item hud-streak">
-        🔥 تركيز متصل: <span id="streak">0</span>
-      </div>
-    </div>
+      const chaptersDiv = document.createElement("div");
+      chaptersDiv.className = "chapters";
 
-    <div class="terms" id="termsContainer">
-      <p>👇 اقرأ التعريف، استحضر الإجابة ذهنياً، ثم اسحب المصطلح</p>
-      <div id="termsBox"></div>
-    </div>
-
-    <div id="quiz" class="main">
-      <div class="focus-banner">
-        🫁 خذ نفساً عميقاً قبل البدء — الدماغ يحتفظ بالمعلومات أفضل في حالة
-        الاسترخاء
-      </div>
-    </div>
-
-    <div class="controls">
-      <button id="nextBtn" class="btn btn-next" onclick="nextChapter()">
-        ➡️ القسم التالي
-      </button>
-      <button class="btn btn-answer" onclick="toggleAnswers()">
-        📖 نموذج الإجابة
-      </button>
-      <button id="reset" class="btn reset" onclick="location.reload()">
-        🔄 تجربة جديدة
-      </button>
-    </div>
-
-    <div class="answer">
-      <div id="answers" class="box">
-        <h2>🧠 نموذج المراجعة الشامل</h2>
-        <div id="ansContent"></div>
-      </div>
-    </div>
-
-    <div class="score" id="scoreBubble">
-      🎯 <span id="s">0</span> / <span id="t">0</span>
-    </div>
-
-    <div class="footer">
-      <div class="signature">🎓 إعداد: بدر الدوسري</div>
-      <div style="font-style: italic">دعواتكم الصالحة في ظهر الغيب 🤲</div>
-      <div style="margin-top: 10px; font-size: 0.8rem">
-        📚 Introduction to Mobile Application Development<br />جامعة الإمام محمد
-        بن سعود الإسلامية
-      </div>
-    </div>
-
-    <script>
-      /* ══ THEME ══ */
-      let isLight = false,
-        toastTimer = null;
-      function toggleTheme() {
-        isLight = !isLight;
-        document.body.classList.toggle("light", isLight);
-        showToast(
-          isLight
-            ? "☀️ تم التبديل للوضع النهاري"
-            : "🌙 تم التبديل للوضع الليلي",
-        );
-      }
-      function showToast(msg) {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.classList.add("show");
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
-      }
-
-      /* ══ AUDIO ══ */
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const audioCtx = new AudioContext();
-      function playSound(ok) {
-        if (audioCtx.state === "suspended") audioCtx.resume();
-        const osc = audioCtx.createOscillator(),
-          gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        if (ok) {
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(
-            1200,
-            audioCtx.currentTime + 0.12,
-          );
-          osc.frequency.exponentialRampToValueAtTime(
-            1600,
-            audioCtx.currentTime + 0.22,
-          );
-          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioCtx.currentTime + 0.4,
-          );
-        } else {
-          osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(280, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(
-            130,
-            audioCtx.currentTime + 0.25,
-          );
-          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioCtx.currentTime + 0.3,
-          );
-        }
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.45);
-      }
-
-      /* ══ TIMER ══ */
-      let startTime = null,
-        timerInterval = null;
-      let correctCount = 0,
-        wrongCount = 0,
-        streakCount = 0;
-      const termFails = {};
-      function startTimer() {
-        if (!timerInterval) {
-          startTime = Date.now();
-          timerInterval = setInterval(() => {
-            const e = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById("timer").textContent =
-              String(Math.floor(e / 60)).padStart(2, "0") +
-              ":" +
-              String(e % 60).padStart(2, "0");
-          }, 1000);
-        }
-      }
-      function updateAccuracy() {
-        const t = correctCount + wrongCount;
-        document.getElementById("accuracy").textContent =
-          (t === 0 ? 100 : Math.round((correctCount / t) * 100)) + "%";
-      }
-      function updateStreak(ok) {
-        streakCount = ok ? streakCount + 1 : 0;
-        document.getElementById("streak").textContent = streakCount;
-      }
-      function getElapsedStr() {
-        if (!startTime) return "00:00";
-        const e = Math.floor((Date.now() - startTime) / 1000);
-        return (
-          String(Math.floor(e / 60)).padStart(2, "0") +
-          ":" +
-          String(e % 60).padStart(2, "0")
-        );
-      }
-
-      /* ══════════════════════════════════════
-   📚 البيانات
-══════════════════════════════════════ */
-      const items = [
-        {
-          cat: "أساسيات النظام البيئي والتطوير",
-          term: "🔄 App Lifecycle",
-          rawTerm: "App Lifecycle",
-          en: "A process for building applications that run on mobile devices including planning, design, development, and testing  ",
-          ar: "دورة حياة تطوير تطبيقات الجوال التي تبدأ بالتخطيط وتنتهي بالاختبار والإطلاق  ",
-          slide: 4,
-          details:
-            "• تبدأ بالبحث والتخطيط\n• تشمل تصميم واجهة المستخدم (UI/UX)\n• تنتهي بالاختبار والإطلاق ",
-          mnemonic:
-            "زي دورة حياة الفراشة: تخطيط (يرقة)، تصميم وتطوير (شرنقة)، ثم إطلاق التطبيق يطير (فراشة).",
-        },
-        {
-          cat: "أساسيات النظام البيئي والتطوير",
-          term: "🌍 Mobile Ecosystem",
-          rawTerm: "Mobile Ecosystem",
-          en: "A collection of multiple devices, software, companies, and processes for data sharing  ",
-          ar: "النظام البيئي المتكامل الذي يجمع الأجهزة والشركات وبرامج مشاركة البيانات  ",
-          slide: 15,
-          details:
-            "• يشمل مصنعي الأجهزة والمطورين\n• يغطي نقل البيانات بين الأجهزة المختلفة\n• يتضمن أنظمة التشغيل ومتاجر التطبيقات",
-          mnemonic:
-            "مثل الغابة: الشجر هو الأجهزة، والحيوانات هي التطبيقات، وكلهم يعيشون ويتفاعلون مع بعض.",
-        },
-        {
-          cat: "أساسيات النظام البيئي والتطوير",
-          term: "⚙️ Mobile OS",
-          rawTerm: "Mobile Operating System",
-          en: "A software platform specifically designed to run on mobile devices  ",
-          ar: "نظام تشغيل مصمم خصيصاً لتشغيل التطبيقات على الأجهزة المحمولة  ",
-          slide: 9,
-          details:
-            "• يجمع ميزات الكمبيوتر مع الموبايل\n• يشمل أدوات مثل الكاميرا والـ GPS\n• أمثلة: iOS و Android",
-          mnemonic:
-            "تخيله 'مدير المرور' داخل جوالك، ينظم متى التطبيقات تشتغل ومتى توقف.",
-        },
-        {
-          cat: "أساسيات النظام البيئي والتطوير",
-          term: "🎯 Contextual Design",
-          rawTerm: "Contextual Design",
-          en: "Presents the most relevant content and functions up front at all times  ",
-          ar: "تصميم ذكي يقدم المحتوى والوظائف الأكثر صلة فوراً بناءً على سياق المستخدم  ",
-          slide: 19,
-          details:
-            "• يقلل من النقرات والفوضى\n• يتكيف مع الوقت والموقع\n• مثال: توصيات نتفليكس الذكية",
-          mnemonic:
-            "زي الجرسون الذكي اللي يجيب لك قهوتك المفضلة أول ما تجلس بدون ما تطلب.",
-        },
-        {
-          cat: "أنواع التطبيقات",
-          term: "⚡ Native Apps",
-          rawTerm: "Native Apps",
-          en: "Applications created for one specific platform or operating system  ",
-          ar: "تطبيقات مبنية ومبرمجة خصيصاً للعمل على نظام تشغيل واحد محدد  ",
-          slide: 51,
-          details:
-            "• أداء سريع وممتاز\n• وصول كامل لخصائص الجهاز\n• تكلفة صيانتها أعلى وتأخذ مساحة ",
-          mnemonic:
-            "الولد الأصلي للبلد، يتكلم لغتها بطلاقة (نفس لغة النظام) ويدل كل الشوارع (موارد الجهاز).",
-        },
-        {
-          cat: "أنواع التطبيقات",
-          term: "🌐 Web Apps",
-          rawTerm: "Web Apps",
-          en: "Responsive versions of websites accessed via a mobile web browser  ",
-          ar: "نسخ متجاوبة من المواقع الإلكترونية تعمل من خلال متصفح الجوال ولا تحتاج تثبيت  ",
-          slide: 51,
-          details:
-            "• تعتمد على وجود متصفح وإنترنت\n• لا تستهلك مساحة تخزين\n• تكاملها ضعيف مع هاردوير الجهاز",
-          mnemonic:
-            "زي السائح اللي يزور البلد (الجوال) أونلاين بس ما عنده بيت (تطبيق مثبت) يقعد فيه.",
-        },
-        {
-          cat: "أنواع التطبيقات",
-          term: "🧬 Hybrid Apps",
-          rawTerm: "Hybrid Apps",
-          en: "Combinations of native and web apps, wrapped within a native app shell  ",
-          ar: "تطبيقات هجينة تجمع ميزات الويب والـ Native وتُحمل من المتجر  ",
-          slide: 51,
-          details:
-            "• أسرع وأرخص في البناء من النيتف\n• قد تكون أبطأ لأنها تحمل العناصر\n• كود واحد يعمل على عدة منصات ",
-          mnemonic: "السيارة الهايبرد؛ نصها بنزين (Native) ونصها كهرباء (Web).",
-        },
-        {
-          cat: "أنماط بنية المعلومات",
-          term: "👑 Hierarchy",
-          rawTerm: "Hierarchy",
-          en: "Structural, top-down organization of content from general to specific  ",
-          ar: "تنظيم هيكلي للمحتوى من الأعلى للأسفل، يبدأ من العام إلى الخاص  ",
-          slide: 38,
-          details:
-            "• النمط القياسي للمواقع\n• صفحة رئيسية تتفرع لصفحات فرعية\n• يقلل الإجهاد الإدراكي للمستخدم ",
-          mnemonic:
-            "زي شجرة العايلة، الجد فوق وكل ما تنزل تلاقي الأحفاد والتفاصيل.",
-        },
-        {
-          cat: "أنماط بنية المعلومات",
-          term: "🎡 Hub & spoke",
-          rawTerm: "Hub & spoke",
-          en: "A central index from which users navigate out and must return to in order to switch spokes  ",
-          ar: "فهرس مركزي تتفرع منه مسارات، وللانتقال بينها يجب العودة للمركز أولاً  ",
-          slide: 39,
-          details:
-            "• النمط الافتراضي في الآيفون\n• لا يمكن التنقل الجانبي المباشر\n• يقيد مسار المستخدم",
-          mnemonic:
-            "تخيل دوار كبير، ما تقدر تروح للشارع الثاني إلا إذا رجعت للدوار (المركز) أول.",
-        },
-        {
-          cat: "أنماط بنية المعلومات",
-          term: "🪆 Nested doll",
-          rawTerm: "Nested doll",
-          en: "Leads users in a linear fashion to more detailed content  ",
-          ar: "نمط تنقل خطي يأخذ المستخدم تدريجياً لمحتوى أكثر تفصيلاً  ",
-          slide: 40,
-          details:
-            "• مفيد للتنقل السريع\n• يعطي إحساساً واضحاً بالتقدم\n• يعتمد على الأمام والخلف",
-          mnemonic:
-            "دُمية ماتريوشكا الروسية، تفتح وحدة تلاقي أصغر جوّاها، وكل ما تعمقت زادت التفاصيل.",
-        },
-        {
-          cat: "أنماط بنية المعلومات",
-          term: "🗂️ Tabbed view",
-          rawTerm: "Tabbed view",
-          en: "A collection of sections tied together by a toolbar menu  ",
-          ar: "مجموعة أقسام مرتبطة بشريط أدوات يتيح التبديل السريع بينها  ",
-          slide: 41,
-          details:
-            "• مألوف جداً لمستخدمي التطبيقات\n• يوضح وظائف التطبيق الرئيسية فور فتحه",
-          mnemonic:
-            "زي ملف الأوراق اللي فيه فواصل ملونة من فوق، تسحب القسم اللي تبيه بسرعة.",
-        },
-        {
-          cat: "أنماط بنية المعلومات",
-          term: "🍱 Bento Box",
-          rawTerm: "Bento Box / Dashboard",
-          en: "Brings detailed content directly to the index screen using components  ",
-          ar: "لوحة معلومات تعرض أجزاء من محتويات وأدوات متنوعة في الشاشة الرئيسية مباشرة  ",
-          slide: 42,
-          details:
-            "• مستوحى من صندوق الطعام الياباني\n• يعرض مقتطفات من أدوات متعددة\n• يغني عن التنقل المتكرر",
-          mnemonic:
-            "بوكس الشاورما المقسم، كل زاوية فيها صنف (ثوم، مخلل، بطاطس) وكلها قدام عينك.",
-        },
-      ];
-
-      /* ══ COLORS ══ */
-      const chapters = [...new Set(items.map((i) => i.cat))];
-      const palette = [
-        "#0d9488",
-        "#6366f1",
-        "#b45309",
-        "#be185d",
-        "#0369a1",
-        "#15803d",
-      ];
-      const colors = {};
-      chapters.forEach((c, i) => (colors[c] = palette[i % palette.length]));
-
-      let score = 0;
-      const total = items.length;
-      let currentChapterIndex = 0;
-      const chapterScores = {};
-      document.getElementById("t").textContent = total;
-      items.forEach((it) => (termFails[it.term] = 0));
-      function shuffle(a) {
-        return [...a].sort(() => Math.random() - 0.5);
-      }
-      let drag = null;
-      const termsBox = document.getElementById("termsBox"),
-        quiz = document.getElementById("quiz");
-
-      function loadTermsForCurrentChapter() {
-        termsBox.innerHTML = "";
-        const cat = chapters[currentChapterIndex];
-        shuffle(items.filter((i) => i.cat === cat)).forEach((it) => {
-          const p = document.createElement("div");
-          p.className = "pill";
-          p.textContent = it.term;
-          p.draggable = true;
-          p.dataset.term = it.term;
-          p.style.background = colors[it.cat];
-          p.addEventListener("dragstart", (e) => {
-            startTimer();
-            drag = p;
-            e.dataTransfer.setData("text/plain", it.term);
-            setTimeout(() => (p.style.opacity = 0.35), 0);
-          });
-          p.addEventListener("dragend", () => {
-            p.style.opacity = 1;
-            drag = null;
-          });
-          termsBox.appendChild(p);
+      if (subj.chapters.length === 0) {
+        chaptersDiv.innerHTML = `<div class="empty-msg">🔜 قريباً...</div>`;
+      } else {
+        subj.chapters.forEach((ch, i) => {
+          const a = document.createElement("a");
+          a.className = "ch-link";
+          a.href = `${subj.folder}/${ch.file}`;
+          a.innerHTML = `
+            <div class="ch-num" style="background:${subj.color}">${i + 1}</div>
+            <div class="ch-text">
+              <div class="ch-title">${ch.title}</div>
+              ${ch.sub ? `<div class="ch-sub">${ch.sub}</div>` : ""}
+            </div>
+            <span class="ch-arrow">←</span>
+          `;
+          chaptersDiv.appendChild(a);
         });
       }
 
-      chapters.forEach((ch, idx) => {
-        chapterScores[ch] = 0;
-        const chItems = items.filter((i) => i.cat === ch);
-        const sec = document.createElement("section");
-        sec.className = `chapter ${idx === 0 ? "active" : ""}`;
-        sec.id = `chap-${idx}`;
-        sec.innerHTML = `<div class="ch-header" style="background:${colors[ch]}"><span>${ch}</span><span class="ch-badge">القسم ${idx + 1}/${chapters.length} · ${chItems.length} مصطلحات</span></div>`;
-        const g = document.createElement("div");
-        g.className = "grid";
-
-        shuffle(chItems).forEach((it) => {
-          const card = document.createElement("div");
-          card.className = "card";
-          const stripe = document.createElement("div");
-          stripe.className = "card-stripe";
-          stripe.style.background = `linear-gradient(90deg,${colors[it.cat]},transparent)`;
-          card.appendChild(stripe);
-
-          const en = document.createElement("div");
-          en.className = "en";
-          en.textContent = it.en;
-          card.appendChild(en);
-          const ar = document.createElement("div");
-          ar.className = "ar";
-          ar.textContent = it.ar;
-          card.appendChild(ar);
-
-          /* ── Details + Slide ── */
-          if (it.slide || it.details) {
-            const det = document.createElement("div");
-            det.className = "details-block";
-            if (it.slide) {
-              const sr = document.createElement("div");
-              sr.className = "slide-ref";
-              sr.textContent = `📄 Slide ${it.slide}`;
-              det.appendChild(sr);
-            }
-            if (it.details) {
-              const dt = document.createElement("div");
-              dt.className = "details-text";
-              dt.innerHTML = it.details.replace(/\n/g, "<br>");
-              det.appendChild(dt);
-            }
-            card.appendChild(det);
-          }
-
-          const zone = document.createElement("div");
-          zone.className = "zone";
-          zone.textContent = "أفلت المصطلح هنا";
-          zone.dataset.target = it.term;
-          zone.dataset.cat = it.cat;
-          const hint = document.createElement("div");
-          hint.className = "hint";
-          hint.innerHTML = `🧠 <b>رابط ذهني:</b> ${it.mnemonic}`;
-
-          function handleDrop(term) {
-            zone.classList.remove("hover");
-            if (!drag || zone.classList.contains("correct")) return;
-            if (term === zone.dataset.target) {
-              playSound(true);
-              zone.classList.add("correct");
-              zone.textContent = term;
-              zone.style.background = colors[zone.dataset.cat];
-              zone.style.borderColor = colors[zone.dataset.cat];
-              drag.style.display = "none";
-              hint.style.display = "none";
-              correctCount++;
-              updateStreak(true);
-              updateAccuracy();
-              score++;
-              chapterScores[ch]++;
-              document.getElementById("s").textContent = score;
-              document.getElementById("bar").style.width =
-                (score / total) * 100 + "%";
-              const bubble = document.getElementById("scoreBubble");
-              bubble.classList.remove("pop");
-              void bubble.offsetWidth;
-              bubble.classList.add("pop");
-              if (chapterScores[ch] === chItems.length) {
-                if (currentChapterIndex < chapters.length - 1) {
-                  document.getElementById("nextBtn").style.display =
-                    "inline-block";
-                } else {
-                  document.getElementById("termsContainer").style.display =
-                    "none";
-                  document.getElementById("reset").style.display =
-                    "inline-block";
-                  clearInterval(timerInterval);
-                  triggerWinConfetti();
-                  setTimeout(showResults, 1800);
-                }
-              }
-            } else {
-              playSound(false);
-              zone.classList.add("wrong");
-              const prev = zone.textContent;
-              zone.textContent = "❌ أعد المحاولة";
-              termFails[it.term]++;
-              wrongCount++;
-              updateStreak(false);
-              updateAccuracy();
-              hint.style.display = "block";
-              setTimeout(() => {
-                zone.classList.remove("wrong");
-                zone.textContent = prev;
-              }, 900);
-            }
-          }
-          zone.ondragover = (e) => {
-            e.preventDefault();
-            if (!zone.classList.contains("correct"))
-              zone.classList.add("hover");
-          };
-          zone.ondragleave = () => zone.classList.remove("hover");
-          zone.ondrop = (e) => {
-            e.preventDefault();
-            handleDrop(
-              e.dataTransfer.getData("text/plain") ||
-                (drag && drag.dataset.term),
-            );
-          };
-          card.appendChild(zone);
-          card.appendChild(hint);
-          g.appendChild(card);
-        });
-        sec.appendChild(g);
-        quiz.appendChild(sec);
-      });
-      loadTermsForCurrentChapter();
-
-      function nextChapter() {
-        document
-          .getElementById(`chap-${currentChapterIndex}`)
-          .classList.remove("active");
-        currentChapterIndex++;
-        document
-          .getElementById(`chap-${currentChapterIndex}`)
-          .classList.add("active");
-        document.getElementById("nextBtn").style.display = "none";
-        loadTermsForCurrentChapter();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function showResults() {
-        const totalAtt = correctCount + wrongCount;
-        const acc =
-          totalAtt === 0 ? 100 : Math.round((correctCount / totalAtt) * 100);
-        const perfectCount = items.filter(
-          (it) => termFails[it.term] === 0,
-        ).length;
-        const weakItems = items.filter((it) => termFails[it.term] > 0);
-        const timeStr = getElapsedStr();
-        document.getElementById("resPerfect").textContent = perfectCount;
-        document.getElementById("resReview").textContent = weakItems.length;
-        document.getElementById("resTime").textContent = timeStr;
-        document.getElementById("resAcc").textContent = acc + "%";
-        setTimeout(() => {
-          document.getElementById("perfBar").style.width = acc + "%";
-        }, 300);
-        let grade, msg;
-        if (acc === 100) {
-          grade = "🏆";
-          msg = "إتقان تام! ذاكرتك خارقة — أنت جاهز للاختبار 💪";
-        } else if (acc >= 85) {
-          grade = "🥇";
-          msg = "ممتاز! بضع مراجعات بسيطة وستكون مثالياً";
-        } else if (acc >= 70) {
-          grade = "🥈";
-          msg = "جيد جداً — ركّز على المصطلحات الضعيفة أدناه";
-        } else if (acc >= 50) {
-          grade = "🥉";
-          msg = "جيد — هذه المصطلحات تحتاج مراجعة أعمق";
-        } else {
-          grade = "📚";
-          msg = "لا بأس، التكرار هو أساس الحفظ — حاول مرة أخرى!";
-        }
-        document.getElementById("resGrade").textContent = grade;
-        document.getElementById("resMsg").textContent = msg;
-        document.getElementById("resSubtitle").textContent =
-          `أكملت ${total} مصطلح في ${timeStr}`;
-        const weakList = document.getElementById("weakList"),
-          weakBox = document.getElementById("weakBox");
-        if (weakItems.length === 0) {
-          weakBox.style.borderColor = "rgba(16,185,129,0.3)";
-          weakBox.style.background = "rgba(16,185,129,0.07)";
-          weakList.innerHTML = `<span class="no-weak">🎉 أجبت على الكل من أول محاولة!</span>`;
-          document.querySelector(".weak-terms h4").style.color = "#10b981";
-          document.querySelector(".weak-terms h4").textContent =
-            "✅ لا توجد مصطلحات ضعيفة:";
-        } else {
-          weakList.innerHTML = weakItems
-            .map(
-              (it) =>
-                `<span class="weak-pill" style="background:${colors[it.cat]}">${it.term}</span>`,
-            )
-            .join("");
-        }
-        document.getElementById("resultsScreen").classList.add("show");
-      }
-      function closeResults() {
-        document.getElementById("resultsScreen").classList.remove("show");
-        toggleAnswers();
-      }
-
-      function triggerWinConfetti() {
-        const end = Date.now() + 4000,
-          d = { startVelocity: 35, spread: 360, ticks: 70, zIndex: 100 };
-        const r = (a, b) => Math.random() * (b - a) + a;
-        const iv = setInterval(() => {
-          if (Date.now() > end) return clearInterval(iv);
-          const pc = 60 * ((end - Date.now()) / 4000),
-            clr = ["#00d4b4", "#6366f1", "#f59e0b", "#10b981"];
-          confetti({
-            ...d,
-            particleCount: pc,
-            colors: clr,
-            origin: { x: r(0.1, 0.3), y: Math.random() - 0.2 },
-          });
-          confetti({
-            ...d,
-            particleCount: pc,
-            colors: clr,
-            origin: { x: r(0.7, 0.9), y: Math.random() - 0.2 },
-          });
-        }, 250);
-      }
-
-      /* ══ ANSWER TABLE — with slide + details columns ══ */
-      const ansContent = document.getElementById("ansContent");
-      chapters.forEach((ch) => {
-        const title = document.createElement("div");
-        title.className = "ch-title";
-        title.style.background = colors[ch];
-        title.textContent = ch;
-        ansContent.appendChild(title);
-        const tbl = document.createElement("table");
-        tbl.innerHTML = `<thead><tr>
-    <th>المصطلح</th>
-    <th>Slide</th>
-    <th>التعريف الإنجليزي</th>
-    <th>التعريف بالعربي</th>
-    <th>التفاصيل</th>
-    <th>الرابط الذهني</th>
-  </tr></thead>
-  <tbody>${items
-    .filter((i) => i.cat === ch)
-    .map(
-      (i) => `<tr>
-    <td style="color:${colors[ch]};font-weight:900;white-space:nowrap">${i.term}</td>
-    <td class="slide-cell">📄 ${i.slide || "—"}</td>
-    <td><div class="enCell">${i.en}</div></td>
-    <td>${i.ar}</td>
-    <td class="details-cell">${(i.details || "").replace(/\n/g, "<br>")}</td>
-    <td style="color:#a78bfa;font-size:0.82rem">🧠 ${i.mnemonic}</td>
-  </tr>`,
-    )
-    .join("")}</tbody>`;
-        ansContent.appendChild(tbl);
+      header.addEventListener("click", () => {
+        header.classList.toggle("open");
+        chaptersDiv.classList.toggle("open");
       });
 
-      function toggleAnswers() {
-        const b = document.getElementById("answers");
-        b.style.display = b.style.display === "block" ? "none" : "block";
-        if (b.style.display === "block")
-          b.scrollIntoView({ behavior: "smooth" });
+      // Auto-open first subject
+      if (idx === 0) {
+        header.classList.add("open");
+        chaptersDiv.classList.add("open");
       }
-    </script>
-  </body>
+
+      div.appendChild(header);
+      div.appendChild(chaptersDiv);
+      container.appendChild(div);
+    });
+  </script>
+</body>
 </html>
