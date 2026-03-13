@@ -1,8 +1,704 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>قريباً</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet"/>
-<style>body{background:#090e1a;color:#fff;font-family:Cairo,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;margin:0}div{padding:20px}h1{font-size:3rem;margin-bottom:10px}p{color:rgba(255,255,255,.5);font-size:1.1rem;font-weight:600}a{color:#00d4b4;margin-top:20px;display:inline-block;font-weight:800;text-decoration:none;font-size:.95rem}a:hover{text-decoration:underline}</style>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>مراجعة – Symmetric Encryption</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root{--font:"Cairo",sans-serif;--bg:#090e1a;--bg2:#0f1829;--surface:rgba(255,255,255,.04);--surface-hi:rgba(255,255,255,.08);--border:rgba(255,255,255,.1);--border-hi:rgba(255,255,255,.2);--text:#e8edf5;--text-dim:rgba(232,237,245,.55);--accent:#00d4b4;--wrong:#f43f5e;--glow:0 0 30px rgba(0,212,180,.25);--glow-green:0 0 30px rgba(16,185,129,.4);--r:18px;--hud-bg:rgba(9,14,26,.92);--terms-bg:rgba(9,14,26,.94);--score-bg:linear-gradient(135deg,#0f1829,#1a2540);--card-shadow:0 8px 24px rgba(0,0,0,.3);--tbl-border:rgba(255,255,255,.08);--th-bg:rgba(255,255,255,.05);--td-bg:rgba(255,255,255,.02)}
+    body.light{--bg:#f5f0e8;--bg2:#fdf8f2;--surface:rgba(120,80,20,.06);--surface-hi:rgba(120,80,20,.10);--border:rgba(100,65,15,.16);--border-hi:rgba(100,65,15,.32);--text:#1c1208;--text-dim:#4a3520;--text-muted:#7a5c3a;--accent:#0a7c6e;--wrong:#c0392b;--glow:0 0 24px rgba(10,124,110,.2);--glow-green:0 0 18px rgba(16,185,129,.25);--hud-bg:rgba(245,240,232,.96);--terms-bg:rgba(245,240,232,.97);--score-bg:linear-gradient(135deg,#1c1208,#3d2510);--card-shadow:0 4px 18px rgba(100,65,15,.12);--tbl-border:rgba(100,65,15,.14);--th-bg:rgba(100,65,15,.07);--td-bg:rgba(100,65,15,.03)}
+    body.light::before{background-image:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(10,124,110,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(180,120,20,.06) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 50% 50%,rgba(100,65,15,.04) 0%,transparent 50%)}
+    body.light header{background:linear-gradient(160deg,rgba(10,124,110,.1) 0%,rgba(180,120,20,.07) 100%)}
+    body.light .neuro-tip{background:rgba(10,124,110,.08);border-color:rgba(10,124,110,.22);color:#0a5c52}
+    body.light .focus-banner{background:linear-gradient(135deg,rgba(10,124,110,.08),rgba(180,120,20,.06));border-color:rgba(10,124,110,.2);color:#1c1208}
+    body.light .zone{border-color:rgba(100,65,15,.22)}
+    body.light .ar{color:#2e1a08;background:rgba(100,65,15,.07);border-right-color:#0a7c6e;border-right-width:3px;font-weight:700}
+    body.light .details-block{background:rgba(10,124,110,.07);border-color:rgba(10,124,110,.22)}
+    body.light .hint{background:rgba(99,102,241,.06);border-color:rgba(99,102,241,.18)}
+    body.light .hint.correct-hint{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.22)}
+    body.light .btn-answer{background:#fdf8f2;color:#1c1208;border-color:rgba(100,65,15,.22)}
+    body.light .box{background:#fdf8f2;border-color:rgba(100,65,15,.16);box-shadow:0 4px 20px rgba(100,65,15,.1)}
+    body.light .en{color:#1c1208}
+    body.light .enCell{color:#1c1208}
+    body.light .hud-item{background:#fdf8f2;border-color:rgba(100,65,15,.18)}
+    body.light .results-card{background:#fdf8f2;box-shadow:0 12px 40px rgba(100,65,15,.12)}
+    body.light .stat-box{background:rgba(100,65,15,.06);border-color:rgba(100,65,15,.14)}
+    body.light .perf-bar-bg{background:rgba(100,65,15,.12)}
+    body.light #resultsScreen{background:rgba(245,240,232,.96)}
+    body.light .score{color:#ffffff}
+    body.light .ios-toggle{background:#e8dcc8;border-color:rgba(100,65,15,.3);box-shadow:0 2px 12px rgba(100,65,15,.18)}
+    body.light #muteBtn{background:#e8dcc8;border-color:rgba(100,65,15,.3)}
+    body.light #muteBtn.muted{background:rgba(192,57,43,.15);border-color:rgba(192,57,43,.4)}
+    body.light .mode-btn{background:#fdf8f2;color:#1c1208;border-color:rgba(100,65,15,.22)}
+    body.light .mode-btn.active{background:linear-gradient(135deg,#0a7c6e,#085f54);color:#fff;border-color:transparent}
+    body.light .exam-card{background:#fdf8f2;border-color:rgba(100,65,15,.18)}
+    body.light .exam-pill{background:#fdf8f2;color:#1c1208;border-color:rgba(100,65,15,.22)}
+    body.light .exam-pill.correct-anim{background:linear-gradient(135deg,#059669,#10b981)!important;color:#fff!important;border-color:transparent!important}
+    body.light .exam-pill.wrong-anim{background:rgba(192,57,43,.15)!important;border-color:#c0392b!important;color:#a93226!important}
+    body.light .countdown-bg{background:rgba(100,65,15,.14)}
+    body.light .hint-btn{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.2);color:#4f46e5}
+    body.light .hint-level{background:rgba(100,65,15,.05);border-color:rgba(100,65,15,.16);color:#1c1208}
+    body.light .exam-ar{border-right-color:#0a7c6e;border-right-width:3px;background:rgba(100,65,15,.05);color:#2e1a08;font-weight:700}
+    body.light .exam-en{color:#1c1208;font-weight:800}
+    body.light .chunk-progress{background:rgba(100,65,15,.05);border-color:rgba(100,65,15,.14)}
+    body.light .chunk-dot{background:rgba(100,65,15,.18)}
+    body.light .chunk-dot.done{background:#0a7c6e}
+    body.light .conf-btn{background:#fdf8f2;border-color:rgba(100,65,15,.22);color:#1c1208}
+    body.light .exam-feedback{background:rgba(10,124,110,.05);border-color:rgba(10,124,110,.2)}
+    body.light .exam-feedback.wrong-fb{background:rgba(192,57,43,.04);border-color:rgba(192,57,43,.15)}
+    body.light .recall-input{background:#fdf8f2;border-color:rgba(100,65,15,.25);color:#1c1208}
+    body.light .recall-card{background:#fdf8f2;border-color:rgba(100,65,15,.18)}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .45s,color .45s}
+    body::before{content:"";position:fixed;inset:0;background-image:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(0,212,180,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(99,102,241,.06) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 50% 50%,rgba(245,158,11,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+    body>*{position:relative;z-index:1}
+    #touchGhost{position:fixed;pointer-events:none;z-index:9999;display:none;transform:translate(-50%,-50%) scale(1.12);opacity:.88;border-radius:999px;padding:9px 20px;color:#fff;font-family:var(--font);font-weight:800;font-size:.88rem;border:1.5px solid rgba(255,255,255,.25);box-shadow:0 8px 28px rgba(0,0,0,.45);white-space:nowrap}
+    .toggle-wrap{position:fixed;top:14px;left:16px;z-index:100;display:flex;align-items:center;gap:8px}
+    .ios-toggle{width:72px;height:34px;background:#1e2d45;border-radius:999px;border:1.5px solid rgba(255,255,255,.15);cursor:pointer;position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 8px;box-shadow:0 2px 12px rgba(0,0,0,.35);transition:background .4s,border-color .4s;overflow:hidden}
+    .ios-toggle .icon-sun{font-size:.95rem;line-height:1;transition:opacity .3s;z-index:1}
+    .ios-toggle .icon-moon{font-size:.85rem;line-height:1;transition:opacity .3s;z-index:1}
+    body.light .ios-toggle .icon-sun{opacity:1} body.light .ios-toggle .icon-moon{opacity:.35}
+    body:not(.light) .ios-toggle .icon-sun{opacity:.35} body:not(.light) .ios-toggle .icon-moon{opacity:1}
+    .ios-knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#f59e0b;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .38s cubic-bezier(.34,1.56,.64,1);z-index:2}
+    body.light .ios-knob{transform:translateX(38px)}
+    #muteBtn{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);background:#1e2d45;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 2px 12px rgba(0,0,0,.35);transition:background .3s,border-color .3s,transform .2s;flex-shrink:0}
+    #muteBtn:hover{transform:scale(1.1)} #muteBtn:active{transform:scale(.92)}
+    #muteBtn.muted{background:rgba(244,63,94,.25);border-color:rgba(244,63,94,.5)}
+    .mode-switcher{display:flex;justify-content:center;gap:10px;padding:10px 16px;background:var(--hud-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);flex-wrap:wrap}
+    .mode-btn{padding:8px 20px;border-radius:999px;border:1.5px solid var(--border-hi);background:var(--surface);color:var(--text);font-family:var(--font);font-weight:800;font-size:.88rem;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:6px}
+    .mode-btn:hover{transform:translateY(-2px)}
+    .mode-btn.active{background:linear-gradient(135deg,#00d4b4,#0ea5e9);color:#000;border-color:transparent;box-shadow:0 4px 16px rgba(0,212,180,.3)}
+    .toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--bg2);border:1px solid var(--border-hi);color:var(--text);padding:9px 22px;border-radius:999px;font-family:var(--font);font-weight:800;font-size:.88rem;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:999;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;white-space:nowrap}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    header{text-align:center;padding:28px 20px 22px;background:linear-gradient(160deg,rgba(0,212,180,.12) 0%,rgba(99,102,241,.08) 100%);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);transition:background .45s}
+    header h1{font-size:1.75rem;font-weight:900;background:linear-gradient(90deg,#00d4b4,#6366f1,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;justify-content:center;gap:10px}
+    header p{color:var(--text-dim);font-weight:600;font-size:.95rem;margin:6px 0 14px}
+    .neuro-tip{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,180,.1);border:1px solid rgba(0,212,180,.25);padding:5px 16px;border-radius:999px;font-size:.82rem;font-weight:700;color:#7ee8da;margin:0 auto 14px;transition:background .3s,color .3s,border-color .3s}
+    .progress{height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;max-width:440px;margin:0 auto}
+    body.light .progress{background:rgba(180,120,60,.12)}
+    #bar{height:100%;width:0;background:linear-gradient(90deg,#00d4b4,#6366f1,#f59e0b);border-radius:999px;transition:width .6s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 10px rgba(0,212,180,.5)}
+    .hud{display:flex;justify-content:center;gap:12px;padding:10px 16px;background:var(--hud-bg);backdrop-filter:blur(16px);position:sticky;top:0;z-index:25;border-bottom:1px solid var(--border);transition:background .45s;flex-wrap:wrap}
+    .hud-item{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--border);font-weight:800;font-size:.88rem;transition:background .3s,border-color .3s}
+    .hud-time{border-color:rgba(244,63,94,.3)} .hud-acc{border-color:rgba(0,212,180,.3)} .hud-streak{border-color:rgba(245,158,11,.3)}
+    #timer{color:#f87171} #accuracy{color:#5eead4} #streak{color:#fbbf24}
+    body.light #accuracy{color:#0d9488}
+    .terms{position:sticky;top:52px;background:var(--terms-bg);backdrop-filter:blur(16px);padding:12px 14px;z-index:20;border-bottom:1px solid var(--border);transition:background .45s}
+    .terms p{text-align:center;color:var(--text-dim);margin:0 0 10px;font-weight:700;font-size:.88rem}
+    #termsBox{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-height:24vh;overflow-y:auto;padding-bottom:4px}
+    .pill{padding:9px 20px;border-radius:999px;color:#fff;font-weight:800;font-size:.88rem;cursor:grab;border:1.5px solid rgba(255,255,255,.25);box-shadow:0 4px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.15);user-select:none;touch-action:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,opacity .2s}
+    .pill:hover{transform:translateY(-4px) scale(1.04)} .pill:active{cursor:grabbing;transform:scale(.93)}
+    @keyframes breathe{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.3),0 0 0 0 rgba(0,212,180,0)}50%{box-shadow:0 4px 14px rgba(0,0,0,.3),0 0 12px 4px rgba(0,212,180,.18)}}
+    .pill:not(:active){animation:breathe 3.5s ease-in-out infinite}
+    .chunk-progress{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;margin:12px 18px 0;flex-wrap:wrap}
+    .chunk-lbl{font-size:.8rem;font-weight:800;color:var(--text-dim);margin-left:8px}
+    .chunk-dots{display:flex;gap:6px;align-items:center}
+    .chunk-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.12);transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+    .chunk-dot.active{background:var(--accent);transform:scale(1.3);box-shadow:0 0 10px rgba(0,212,180,.4)}
+    .chunk-dot.done{background:#10b981;transform:scale(1)}
+    .main{max-width:1140px;margin:28px auto 100px;padding:0 16px}
+    .focus-banner{background:linear-gradient(135deg,rgba(0,212,180,.1),rgba(99,102,241,.1));border:1px solid rgba(0,212,180,.2);border-radius:12px;padding:12px 18px;text-align:center;font-size:.85rem;font-weight:700;color:#7ee8da;margin:0 0 20px;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .3s,color .3s,border-color .3s}
+    .chapter{display:none} .chapter.active{display:block;animation:slideUp .5s cubic-bezier(.22,1,.36,1)}
+    @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .ch-header{padding:16px 20px;color:#fff;font-weight:900;font-size:1.1rem;display:flex;justify-content:space-between;align-items:center;border-radius:var(--r) var(--r) 0 0;position:relative;overflow:hidden}
+    .ch-header::after{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(255,255,255,.1),transparent);pointer-events:none}
+    .ch-badge{background:rgba(255,255,255,.2);padding:3px 12px;border-radius:999px;font-size:.82rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:16px;padding:18px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r)}
+    @media(max-width:600px){.grid{grid-template-columns:1fr;gap:12px;padding:12px}}
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;transition:border-color .3s,box-shadow .3s,transform .2s,background .3s}
+    .card:hover{border-color:var(--border-hi);box-shadow:var(--card-shadow);transform:translateY(-2px)}
+    .card-stripe{height:3px;border-radius:999px;margin-bottom:4px;opacity:.8}
+    .en{direction:ltr;font-weight:800;font-size:.96rem;color:#c7d2e7;line-height:1.55;transition:color .3s}
+    .ar{font-size:.88rem;color:var(--text-dim);line-height:1.65;font-weight:600;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:8px;border-right:2px solid rgba(255,255,255,.1);text-align:right;transition:background .3s,border-color .3s}
+    .details-block{background:rgba(0,212,180,.05);border:1px solid rgba(0,212,180,.15);border-radius:8px;padding:8px 12px}
+    .slide-ref{font-size:.72rem;font-weight:900;color:var(--accent);margin-bottom:5px;letter-spacing:.03em}
+    .details-text{font-size:.8rem;color:var(--text-dim);line-height:1.75;font-weight:600;text-align:right}
+    .zone{margin-top:auto;border:2px dashed rgba(255,255,255,.18);border-radius:10px;height:52px;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:800;color:var(--text-dim);transition:all .25s cubic-bezier(.34,1.56,.64,1);min-height:56px}
+    @media(max-width:768px){.zone{min-height:62px;font-size:.95rem}}
+    .zone.hover{background:rgba(0,212,180,.08);border-color:var(--accent);border-style:solid;color:var(--accent);transform:scale(1.03);box-shadow:var(--glow)}
+    .zone.correct{color:#fff;font-weight:900;border-style:solid;box-shadow:var(--glow-green);animation:popIn .55s cubic-bezier(.175,.885,.32,1.275)}
+    @keyframes popIn{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+    .zone.wrong{background:rgba(244,63,94,.12);border-color:var(--wrong);border-style:solid;color:var(--wrong);animation:shake .4s}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+    .hint{font-size:.82rem;color:#a78bfa;text-align:right;margin-top:6px;font-weight:700;display:none;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.25);padding:8px 10px;border-radius:8px;line-height:1.5;transition:all .4s}
+    .hint.correct-hint{color:#10b981;background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25)}
+    .controls{text-align:center;margin:22px 0;display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+    .btn{padding:12px 26px;border-radius:999px;border:none;font-family:var(--font);font-weight:900;font-size:1rem;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+    .btn:hover{transform:translateY(-3px)} .btn:active{transform:translateY(1px) scale(.97)}
+    .btn-next{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;display:none;box-shadow:0 4px 20px rgba(245,158,11,.4)}
+    .btn-answer{background:var(--surface-hi);color:var(--text);border:1px solid var(--border-hi)}
+    .reset{background:linear-gradient(135deg,#10b981,#3b82f6);color:#fff;display:none;box-shadow:0 4px 20px rgba(16,185,129,.4)}
+    .answer{max-width:1140px;margin:0 auto 40px;padding:0 16px}
+    #answers{display:none}
+    .box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;box-shadow:var(--card-shadow);transition:background .3s,border-color .3s,box-shadow .3s}
+    .box h2{text-align:center;margin-bottom:20px;font-size:1.1rem;color:var(--accent)}
+    .ch-title{color:#fff;font-weight:900;padding:8px 16px;border-radius:8px;margin:18px 0 10px;font-size:.95rem}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:collapse;margin-bottom:4px;min-width:600px}
+    th{background:var(--th-bg);color:var(--accent);font-size:.8rem;padding:8px 12px;border:1px solid var(--tbl-border);text-align:right;font-weight:800}
+    td{padding:10px 12px;border:1px solid var(--tbl-border);font-size:.83rem;color:var(--text-dim);vertical-align:top;background:var(--td-bg);text-align:right;transition:background .3s}
+    .enCell{direction:ltr;text-align:left;color:#c7d2e7;font-size:.82rem}
+    body.light .enCell{color:#1c1208}
+    tr:hover td{background:var(--surface-hi)}
+    .slide-cell{text-align:center;color:var(--accent);font-weight:900;white-space:nowrap;font-size:.8rem}
+    .details-cell{font-size:.79rem;line-height:1.7}
+    .score{position:fixed;bottom:22px;right:22px;background:var(--score-bg);border:1px solid var(--border-hi);padding:7px 22px;border-radius:999px;font-weight:900;font-size:1rem;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:28;color:var(--text);pointer-events:none;transition:background .45s}
+    .score.pop{animation:scorePop .45s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes scorePop{0%{transform:scale(1)}50%{transform:scale(1.22)}100%{transform:scale(1)}}
+    .footer{text-align:center;color:var(--text-dim);font-size:.82rem;padding:30px 20px;line-height:1.9}
+    .signature{font-weight:900;color:var(--accent);font-size:.88rem;margin-bottom:2px}
+    #resultsScreen{position:fixed;inset:0;background:rgba(9,14,26,.92);backdrop-filter:blur(18px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .5s}
+    #resultsScreen.show{opacity:1;pointer-events:auto}
+    .results-card{background:var(--bg2);border-radius:24px;padding:36px 32px;max-width:520px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid var(--border-hi);transition:background .3s;max-height:90vh;overflow-y:auto}
+    .results-grade{font-size:3.5rem;margin-bottom:12px}
+    .results-card h2{font-size:1.4rem;margin-bottom:6px}
+    .results-subtitle{color:var(--text-dim);font-size:.9rem;margin-bottom:22px}
+    .results-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+    .stat-box{background:rgba(255,255,255,.04);border-radius:12px;padding:14px 10px;border:1px solid rgba(255,255,255,.08)}
+    .stat-num{font-size:1.6rem;font-weight:900;margin-bottom:4px}
+    .stat-perfect{color:#10b981} .stat-review{color:#f59e0b} .stat-time{color:#60a5fa} .stat-acc{color:var(--accent)}
+    .stat-label{font-size:.78rem;color:var(--text-dim);font-weight:700}
+    .perf-bar-wrap{margin:0 0 18px}
+    .perf-bar-label{font-size:.8rem;color:var(--text-dim);margin-bottom:6px;font-weight:700}
+    .perf-bar-bg{background:rgba(255,255,255,.08);border-radius:999px;height:10px;overflow:hidden}
+    .perf-bar-fill{height:100%;background:linear-gradient(90deg,#00d4b4,#6366f1);border-radius:999px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1)}
+    .weak-terms{background:rgba(244,63,94,.07);border:1px solid rgba(244,63,94,.2);border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:right}
+    .weak-terms h4{font-size:.85rem;color:#f87171;margin-bottom:10px;font-weight:800}
+    #weakList{display:flex;flex-wrap:wrap;gap:7px}
+    .weak-pill{padding:5px 14px;border-radius:999px;color:#fff;font-size:.78rem;font-weight:800}
+    .no-weak{color:#10b981;font-weight:800;font-size:.88rem}
+    .results-msg{font-size:.95rem;font-weight:700;color:var(--accent);margin-bottom:20px;line-height:1.6}
+    .results-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn-close-results{padding:10px 24px;border-radius:10px;font-family:var(--font);font-weight:800;font-size:.9rem;cursor:pointer;background:transparent;color:var(--text);border:1.5px solid var(--border-hi);transition:all .25s}
+    .btn-retry-results{padding:10px 24px;border-radius:10px;font-family:var(--font);font-weight:800;font-size:.9rem;cursor:pointer;background:var(--accent);color:#000;border:none;transition:all .25s}
+    .btn-close-results:hover,.btn-retry-results:hover{transform:translateY(-2px)}
+    #examMode{display:none;padding:20px 16px 100px;max-width:680px;margin:0 auto}
+    #examMode.active{display:block;animation:slideUp .4s cubic-bezier(.22,1,.36,1)}
+    .exam-meta{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+    .exam-meta-item{font-size:.88rem;font-weight:800;color:var(--text-dim)}
+    .exam-meta-item b{color:var(--text);font-size:1rem}
+    .sr-info{display:none;padding:4px 14px;border-radius:999px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:#fbbf24;font-size:.8rem;font-weight:800}
+    .countdown-wrap{margin-bottom:16px}
+    .countdown-bg{height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+    #countdownBar{height:100%;width:100%;background:linear-gradient(90deg,#00d4b4,#6366f1);border-radius:999px;transition:width .15s linear}
+    .countdown-num{text-align:center;font-size:.82rem;font-weight:800;color:var(--text-dim);margin-top:5px}
+    #countdownNum{color:var(--accent);font-size:1rem;font-weight:900}
+    .conf-label{text-align:center;font-size:.78rem;color:var(--text-dim);font-weight:700;margin-bottom:8px}
+    .confidence-wrap{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+    .conf-btn{padding:8px 18px;border-radius:999px;border:1.5px solid var(--border-hi);background:var(--surface);color:var(--text);font-family:var(--font);font-weight:800;font-size:.82rem;cursor:pointer;transition:all .2s}
+    .conf-btn:hover{transform:translateY(-2px)}
+    .conf-btn.selected{border-color:var(--accent);background:rgba(0,212,180,.12);color:var(--accent)}
+    .exam-feedback{display:none;background:rgba(0,212,180,.05);border:1px solid rgba(0,212,180,.15);border-radius:14px;padding:16px;margin-bottom:14px;animation:slideUp .3s ease;text-align:right}
+    .exam-feedback.show{display:block}
+    .exam-feedback.wrong-fb{background:rgba(244,63,94,.04);border-color:rgba(244,63,94,.2)}
+    .fb-title{font-size:.85rem;font-weight:900;margin-bottom:10px}
+    .fb-row{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+    .fb-col{flex:1;min-width:140px;padding:10px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border)}
+    .fb-col-label{font-size:.7rem;font-weight:900;letter-spacing:.03em;text-transform:uppercase;margin-bottom:5px}
+    .fb-col-label.correct-lbl{color:#10b981}
+    .fb-col-label.wrong-lbl{color:#f43f5e}
+    .fb-col-term{font-weight:900;font-size:.9rem;margin-bottom:3px}
+    .fb-col-def{font-size:.78rem;color:var(--text-dim);line-height:1.5}
+    .fb-mnemonic{margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.18);font-size:.82rem;color:#a78bfa;font-weight:700;line-height:1.5}
+    .exam-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:var(--card-shadow);transition:background .3s,border-color .3s}
+    .exam-cat-badge{display:inline-block;padding:3px 14px;border-radius:999px;color:#fff;font-size:.75rem;font-weight:900;margin-bottom:12px}
+    .sr-badge{display:none;margin-bottom:10px;padding:4px 12px;border-radius:999px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#fbbf24;font-size:.78rem;font-weight:900;width:fit-content}
+    .sr-badge.show{display:inline-flex;align-items:center;gap:5px}
+    .exam-en{direction:ltr;font-weight:800;font-size:1.05rem;color:#c7d2e7;line-height:1.6;margin-bottom:10px}
+    .exam-ar{font-size:.9rem;color:var(--text-dim);line-height:1.7;font-weight:600;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px;border-right:2px solid rgba(255,255,255,.1);margin-bottom:8px}
+    .exam-slide{font-size:.75rem;color:var(--accent);font-weight:900}
+    .exam-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
+    .exam-pill{padding:10px 22px;border-radius:999px;background:var(--surface-hi);color:var(--text);border:1.5px solid var(--border-hi);font-family:var(--font);font-weight:800;font-size:.9rem;cursor:pointer;transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+    .exam-pill:hover:not(:disabled){transform:translateY(-3px) scale(1.04);border-color:var(--accent);color:var(--accent)}
+    .exam-pill:disabled{cursor:default;opacity:.8}
+    .exam-pill.correct-anim{background:linear-gradient(135deg,#059669,#10b981);color:#fff;border-color:transparent;transform:scale(1.06)}
+    .exam-pill.wrong-anim{background:rgba(244,63,94,.2);border-color:#f43f5e;color:#f87171;animation:shake .35s}
+    .hint-area{margin-bottom:14px}
+    .hint-btn{padding:8px 18px;border-radius:999px;background:rgba(99,102,241,.1);border:1.5px solid rgba(99,102,241,.22);color:#a78bfa;font-family:var(--font);font-weight:800;font-size:.85rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+    .hint-btn:hover:not(:disabled){background:rgba(99,102,241,.2);transform:scale(1.04)}
+    .hint-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+    .hint-level{display:none;margin-top:8px;padding:10px 14px;border-radius:10px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);font-size:.85rem;font-weight:700;line-height:1.65;text-align:right;animation:slideUp .3s ease}
+    .hint-level.show{display:block}
+    .hint-lbl{font-size:.7rem;color:#a78bfa;font-weight:900;margin-bottom:4px;letter-spacing:.04em;text-transform:uppercase}
+    #examNextBtn{width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#00d4b4,#0ea5e9);color:#000;font-family:var(--font);font-weight:900;font-size:1rem;cursor:pointer;display:none;transition:all .25s;box-shadow:0 4px 20px rgba(0,212,180,.3);margin-top:4px}
+    #examNextBtn:hover{transform:translateY(-2px)}
+    #examNextBtn.show{display:block;animation:slideUp .3s ease}
+    #recallMode{display:none;padding:20px 16px 100px;max-width:680px;margin:0 auto}
+    #recallMode.active{display:block;animation:slideUp .4s cubic-bezier(.22,1,.36,1)}
+    .recall-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:var(--card-shadow)}
+    .recall-input{width:100%;padding:14px 18px;border-radius:12px;border:1.5px solid var(--border-hi);background:var(--surface);color:var(--text);font-family:var(--font);font-weight:800;font-size:1rem;text-align:center;outline:none;margin-bottom:12px;transition:border-color .3s}
+    .recall-input:focus{border-color:var(--accent)}
+    .recall-input::placeholder{color:var(--text-dim);font-weight:600}
+    .recall-reveal{display:none;text-align:center;padding:16px;border-radius:12px;background:rgba(0,212,180,.06);border:1px solid rgba(0,212,180,.2);margin-bottom:14px}
+    .recall-reveal.show{display:block;animation:slideUp .3s ease}
+    .recall-answer-text{font-size:1.1rem;font-weight:900;color:var(--accent);margin-bottom:8px}
+    .recall-mnemonic{font-size:.85rem;color:#a78bfa;font-weight:700}
+    .recall-self-btns{display:flex;gap:10px;justify-content:center;margin-top:12px}
+    .recall-self-btn{padding:10px 22px;border-radius:999px;border:1.5px solid var(--border-hi);background:var(--surface);font-family:var(--font);font-weight:800;font-size:.88rem;cursor:pointer;transition:all .2s}
+    .recall-self-btn:hover{transform:translateY(-2px)}
+    .recall-self-btn.correct-self{border-color:rgba(16,185,129,.4);color:#10b981}
+    .recall-self-btn.wrong-self{border-color:rgba(244,63,94,.4);color:#f87171}
+    #recallShowBtn{width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#6366f1,#a78bfa);color:#fff;font-family:var(--font);font-weight:900;font-size:1rem;cursor:pointer;transition:all .25s;box-shadow:0 4px 20px rgba(99,102,241,.3)}
+    #recallShowBtn:hover{transform:translateY(-2px)}
+    #recallNextBtn{width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#00d4b4,#0ea5e9);color:#000;font-family:var(--font);font-weight:900;font-size:1rem;cursor:pointer;display:none;transition:all .25s;box-shadow:0 4px 20px rgba(0,212,180,.3);margin-top:8px}
+    #recallNextBtn:hover{transform:translateY(-2px)}
+    #recallNextBtn.show{display:block}
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:999px}
+    body.light ::-webkit-scrollbar-thumb{background:rgba(180,120,60,.2)}
+    @media(max-width:500px){header h1{font-size:1.3rem}.hud{gap:7px;padding-left:68px}.hud-item{padding:5px 9px;font-size:.78rem}.results-card{padding:24px 18px}.mode-btn{padding:6px 14px;font-size:.8rem}
+      .exam-pill{padding:14px 22px;font-size:1rem;min-width:44%}
+      .pill{padding:12px 22px;font-size:.92rem}
+      .zone{min-height:68px;font-size:1rem}
+      .conf-btn{padding:10px 20px;font-size:.88rem}
+      .recall-self-btn{padding:12px 24px;font-size:.92rem}
+      .hint-btn{padding:10px 20px;font-size:.88rem}
+    }
+
+    /* Slide transitions for exam */
+    @keyframes slideInRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideOutLeft{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(30px)}}
+    .exam-card.slide-in{animation:slideInRight .35s cubic-bezier(.22,1,.36,1)}
+    .exam-pills.slide-in{animation:slideInRight .35s cubic-bezier(.22,1,.36,1) .05s both}
+
+    /* Streak celebration */
+    .streak-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:300;padding:20px 40px;border-radius:20px;font-family:var(--font);font-weight:900;font-size:1.4rem;color:#fff;text-align:center;pointer-events:none;opacity:0;transition:none}
+    .streak-banner.show{animation:streakPop .8s cubic-bezier(.34,1.56,.64,1) forwards}
+    @keyframes streakPop{0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-5deg)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(2deg)}60%{transform:translate(-50%,-50%) scale(.95) rotate(-1deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.3) rotate(0);}}
+    .streak-5{background:linear-gradient(135deg,#f59e0b,#ef4444);box-shadow:0 8px 40px rgba(245,158,11,.5)}
+    .streak-10{background:linear-gradient(135deg,#6366f1,#ec4899);box-shadow:0 8px 40px rgba(99,102,241,.5)}
+
+    /* Timer toggle */
+    .timer-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+    .timer-toggle-btn{padding:6px 16px;border-radius:999px;border:1.5px solid var(--border-hi);background:var(--surface);color:var(--text);font-family:var(--font);font-weight:800;font-size:.78rem;cursor:pointer;transition:all .2s}
+    .timer-toggle-btn:hover{transform:translateY(-1px)}
+    .timer-toggle-btn.off{border-color:rgba(244,63,94,.3);color:#f87171;background:rgba(244,63,94,.08)}
+    body.light .timer-toggle-btn{background:#fdf8f2;border-color:rgba(100,65,15,.18);color:#1c1208}
+
+    /* Keyboard shortcut badges */
+    .kb-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);font-size:.7rem;font-weight:900;margin-left:6px;color:var(--text-dim);flex-shrink:0}
+    body.light .kb-badge{background:rgba(180,120,60,.08);border-color:rgba(180,120,60,.2)}
+
+    /* Per-chapter stats in results */
+    .ch-stats{margin-bottom:16px;text-align:right}
+    .ch-stat-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;margin-bottom:4px;background:rgba(255,255,255,.03);border:1px solid var(--border)}
+    .ch-stat-color{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .ch-stat-name{font-size:.78rem;font-weight:800;flex:1}
+    .ch-stat-val{font-size:.78rem;font-weight:900;color:var(--accent)}
+    .stat-extra{font-size:.82rem;color:var(--text-dim);font-weight:700;margin-top:6px}
+    .results-stats-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+    @media(max-width:500px){.results-stats-3{grid-template-columns:1fr 1fr}}
+    .stat-box-sm{background:rgba(255,255,255,.04);border-radius:10px;padding:10px 8px;border:1px solid rgba(255,255,255,.08);text-align:center}
+    .stat-box-sm .stat-num{font-size:1.2rem}
+    .stat-box-sm .stat-label{font-size:.7rem}
+
+    /* ══ DIFFS SECTION ══ */
+    .diffs-section{max-width:1140px;margin:0 auto 40px;padding:0 16px}
+    #diffsPanel{display:none}
+    #diffsPanel.show{display:block}
+    .diffs-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;box-shadow:var(--card-shadow)}
+    .diffs-box h2{text-align:center;margin-bottom:20px;font-size:1.1rem;color:var(--accent)}
+    .diff-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;transition:border-color .3s}
+    .diff-card:hover{border-color:var(--border-hi)}
+    .diff-title{font-weight:900;font-size:.95rem;color:var(--accent);margin-bottom:12px;text-align:center}
+    .diff-row{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+    .diff-col{flex:1;min-width:140px;padding:12px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);text-align:right}
+    .diff-col-label{font-size:.72rem;font-weight:900;letter-spacing:.03em;text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
+    .diff-col-text{font-size:.85rem;color:var(--text);font-weight:700;line-height:1.5}
+    .diff-en{direction:ltr;text-align:left;margin-bottom:6px;color:#c7d2e7}
+    body.light .diff-en{color:#1c1208}
+    .diff-tip{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:8px 12px;font-size:.82rem;color:#fbbf24;font-weight:700;text-align:right;line-height:1.5}
+    body.light .diff-tip{background:rgba(180,120,60,.06);border-color:rgba(180,120,60,.18);color:#92580a}
+    .diff-card-results{background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.15);border-radius:12px;padding:12px;margin-bottom:10px;text-align:right}
+    .diff-card-results .diff-title{font-size:.85rem;margin-bottom:8px}
+    .diff-card-results .diff-row{margin-bottom:6px}
+    .diff-card-results .diff-col{padding:8px;min-width:120px}
+    .diff-card-results .diff-tip{font-size:.78rem;padding:6px 10px}
+
+    /* Diffs mode */
+    #diffsMode{display:none;padding:20px 16px 100px;max-width:680px;margin:0 auto}
+    #diffsMode.active{display:block;animation:slideUp .4s cubic-bezier(.22,1,.36,1)}
+    .diffs-quiz-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:var(--card-shadow)}
+    .diffs-q-title{font-weight:900;font-size:1rem;color:var(--text);text-align:center;margin-bottom:16px;line-height:1.6}
+    .diffs-options{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+    .diffs-opt{padding:12px 18px;border-radius:12px;border:1.5px solid var(--border-hi);background:var(--surface);color:var(--text);font-family:var(--font);font-weight:700;font-size:.88rem;cursor:pointer;text-align:right;transition:all .2s;line-height:1.5}
+    .diffs-opt:hover:not(:disabled){border-color:var(--accent);transform:translateY(-2px)}
+    .diffs-opt.correct-pick{background:linear-gradient(135deg,#059669,#10b981)!important;color:#fff!important;border-color:transparent!important}
+    .diffs-opt.wrong-pick{background:rgba(244,63,94,.15);border-color:#f43f5e;color:#f87171}
+    body.light .diffs-opt.correct-pick{background:linear-gradient(135deg,#059669,#10b981)!important;color:#fff!important;border-color:transparent!important}
+    .diffs-explain{display:none;margin-top:12px;padding:14px;border-radius:12px;background:rgba(0,212,180,.05);border:1px solid rgba(0,212,180,.15);text-align:right;animation:slideUp .3s ease}
+    .diffs-explain.show{display:block}
+    #diffsNextBtn{width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-family:var(--font);font-weight:900;font-size:1rem;cursor:pointer;display:none;transition:all .25s;box-shadow:0 4px 20px rgba(245,158,11,.3);margin-top:8px}
+    #diffsNextBtn:hover{transform:translateY(-2px)}
+    #diffsNextBtn.show{display:block;animation:slideUp .3s ease}
+    .slide-orig-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-dim);font-family:var(--font);font-weight:700;font-size:.78rem;cursor:pointer;transition:all .2s;width:100%}
+    .slide-orig-btn:hover{border-color:rgba(0,212,180,.35);color:var(--accent);background:rgba(0,212,180,.05)}
+    .slide-orig-btn .s-chevron{font-size:.65rem;transition:transform .25s}
+    .slide-orig-btn.open .s-chevron{transform:rotate(180deg)}
+    body.light .slide-orig-btn{background:rgba(100,65,15,.05);border-color:rgba(100,65,15,.18);color:#4a3520}
+    body.light .slide-orig-btn:hover{border-color:rgba(10,124,110,.4);color:#0a7c6e;background:rgba(10,124,110,.07)}
+    .slide-orig-reveal{display:none;padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-size:.8rem;font-weight:600;color:var(--text-dim);line-height:1.75;text-align:right;animation:slideUp .2s ease}
+    .slide-orig-reveal.show{display:block}
+    .slide-orig-lbl{font-size:.65rem;font-weight:900;color:var(--text-dim);opacity:.5;letter-spacing:.05em;display:block;margin-bottom:5px}
+    body.light .slide-orig-reveal{background:rgba(10,124,110,.06);border-color:rgba(10,124,110,.2);color:#2e1a08}
+  </style>
 </head>
-<body><div><h1>🔜</h1><p>الكويز قيد التجهيز...</p><a href="../">← الرجوع للقائمة</a></div></body>
+<body>
+  <div class="toast" id="toast"></div>
+  <div class="streak-banner" id="streakBanner"></div>
+  <div id="touchGhost"></div>
+  <div class="toggle-wrap">
+    <div class="ios-toggle" onclick="toggleTheme()" title="تبديل الوضع"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span><div class="ios-knob"></div></div>
+    <button id="muteBtn" onclick="toggleMute()" title="كتم الصوت">🔊</button>
+  </div>
+  <div id="resultsScreen">
+    <div class="results-card">
+      <div class="results-grade" id="resGrade">🏆</div>
+      <h2>نتيجتك النهائية</h2>
+      <div class="results-subtitle" id="resSubtitle"></div>
+      <div class="results-stats">
+        <div class="stat-box"><div class="stat-num stat-perfect" id="resPerfect">0</div><div class="stat-label">✅ من أول محاولة</div></div>
+        <div class="stat-box"><div class="stat-num stat-review" id="resReview">0</div><div class="stat-label">⚠️ احتاجت مراجعة</div></div>
+        <div class="stat-box"><div class="stat-num stat-time" id="resTime">00:00</div><div class="stat-label">⏱️ الوقت الكلي</div></div>
+        <div class="stat-box"><div class="stat-num stat-acc" id="resAcc">100%</div><div class="stat-label">🎯 دقة الذاكرة</div></div>
+      </div>
+      <div class="perf-bar-wrap"><div class="perf-bar-label">مستوى الإتقان</div><div class="perf-bar-bg"><div class="perf-bar-fill" id="perfBar" style="width:0%"></div></div></div>
+      <div class="results-stats-3" id="extraStats">
+        <div class="stat-box-sm"><div class="stat-num" style="color:#fbbf24" id="resBestStreak">0</div><div class="stat-label">🔥 أفضل ستريك</div></div>
+        <div class="stat-box-sm"><div class="stat-num" style="color:#60a5fa" id="resAvgTime">0s</div><div class="stat-label">⚡ متوسط وقت الإجابة</div></div>
+        <div class="stat-box-sm"><div class="stat-num" style="color:#a78bfa" id="resHints">0</div><div class="stat-label">💡 تلميحات مستخدمة</div></div>
+      </div>
+      <div class="ch-stats" id="chapterStats"></div>
+      <div class="weak-terms" id="weakBox"><h4>🔁 راجع هذه المصطلحات مرة أخرى:</h4><div id="weakList"></div></div>
+      <div id="resultsDiffs" style="display:none;margin-bottom:16px"><h4 style="font-size:.85rem;color:#a78bfa;font-weight:800;margin-bottom:10px">⚡ فروقات مهمة للمصطلحات اللي تلخبطت:</h4><div id="resultsDiffsList"></div></div>
+      <div class="results-msg" id="resMsg"></div>
+      <div class="results-btns"><button class="btn-close-results" onclick="closeResults()">📖 راجع الإجابات</button><button class="btn-retry-results" onclick="location.reload()">🔄 تجربة جديدة</button></div>
+    </div>
+  </div>
+  <header>
+    <h1>📱 Symmetric Encryption – Chapter 2</h1>
+    <p>مراجعة شاملة لأساسيات التشفير، الخوارزميات، والأنماط</p>
+    <div class="neuro-tip">🧠 تذكّر الإجابة في ذهنك أولاً ثم اسحب</div>
+    <div class="progress"><div id="bar"></div></div>
+  </header>
+  <div class="hud">
+    <div class="hud-item hud-time">⏱️ <span id="timer">00:00</span></div>
+    <div class="hud-item hud-acc">🎯 دقة: <span id="accuracy">100%</span></div>
+    <div class="hud-item hud-streak">🔥 <span id="streak">0</span></div>
+  </div>
+  <div class="mode-switcher">
+    <button class="mode-btn active" id="btnNormal" onclick="switchMode('normal')">📚 مراجعة فصل بفصل</button>
+    <button class="mode-btn" id="btnExam" onclick="switchMode('exam')">🔀 اختبار شامل</button>
+    <button class="mode-btn" id="btnRecall" onclick="switchMode('recall')">🧠 استدعاء حر</button>
+    <button class="mode-btn" id="btnDiffs" onclick="switchMode('diffs')">⚡ فروقات</button>
+  </div>
+  <div id="normalMode">
+    <div class="terms" id="termsContainer"><p>👆 اسحب المصطلح وأفلته في مكانه الصحيح</p><div id="termsBox"></div></div>
+    <div id="quiz" class="main"><div class="focus-banner">🫁 خذ نفساً عميقاً قبل البدء — الدماغ يحتفظ بالمعلومات أفضل في حالة الاسترخاء</div></div>
+    <div class="controls">
+      <button id="nextChunkBtn" class="btn btn-next" onclick="advanceChunk()" style="display:none">📦 المجموعة التالية</button>
+      <button id="nextBtn" class="btn btn-next" onclick="nextChapter()">➡️ القسم التالي</button>
+      <button class="btn btn-answer" onclick="toggleAnswers()">📖 نموذج الإجابة</button>
+      <button class="btn btn-answer" onclick="toggleDiffsPanel()">⚡ أهم الفروقات</button>
+      <button id="reset" class="btn reset" onclick="location.reload()">🔄 تجربة جديدة</button>
+    </div>
+    <div class="answer"><div id="answers" class="box"><h2>🧠 نموذج المراجعة الشامل</h2><div id="ansContent"></div></div></div>
+    <div class="diffs-section"><div id="diffsPanel" class="diffs-box"><h2>⚡ أهم الفروقات بين المصطلحات</h2><div id="diffsContent"></div></div></div>
+  </div>
+  <div id="examMode">
+    <div class="exam-meta"><div class="exam-meta-item">📋 سؤال <b id="examQ">1</b> / <b id="examTotal">?</b></div><div class="sr-info" id="srInfo">🔁 للمراجعة: <b id="srCount">0</b></div></div>
+    <div class="timer-toggle-wrap"><button class="timer-toggle-btn" id="timerToggle" onclick="toggleExamTimer()">⏱️ المؤقت: مفعّل</button></div>
+    <div class="countdown-wrap" id="countdownWrap"><div class="countdown-bg"><div id="countdownBar"></div></div><div class="countdown-num">⏳ <span id="countdownNum">15</span> ثانية</div></div>
+    <div class="exam-card" id="examCard"><div class="sr-badge" id="srBadge">🔁 مراجعة مجددة</div><div id="examCatBadge" class="exam-cat-badge"></div><div class="exam-en" id="examEn"></div><div class="exam-ar" id="examAr"></div><div class="exam-slide" id="examSlide"></div></div>
+    <div class="conf-label">🤔 كم أنت متأكد من إجابتك؟</div>
+    <div class="confidence-wrap" id="confWrap"><button class="conf-btn" onclick="setConf(3,this)">💪 متأكد</button><button class="conf-btn" onclick="setConf(2,this)">🤔 أظن</button><button class="conf-btn" onclick="setConf(1,this)">😅 ما أدري</button></div>
+    <div class="hint-area">
+      <button class="hint-btn" id="hintBtn" onclick="showNextHint()">💡 تلميح (<span id="hintLevelNum">1</span>/3)</button>
+      <div class="hint-level" id="hint1"><div class="hint-lbl">🔤 أول حرف</div><div id="hint1Text"></div></div>
+      <div class="hint-level" id="hint2"><div class="hint-lbl">🧠 رابط ذهني</div><div id="hint2Text"></div></div>
+      <div class="hint-level" id="hint3"><div class="hint-lbl">✅ الإجابة الكاملة</div><div id="hint3Text" style="color:var(--accent);font-size:1rem;font-weight:900"></div></div>
+    </div>
+    <div class="exam-pills" id="examPills"></div>
+    <div class="exam-feedback" id="examFeedback"></div>
+    <button id="examNextBtn" onclick="nextExamQ()">التالي ➡️</button>
+  </div>
+  <div id="recallMode">
+    <div class="exam-meta"><div class="exam-meta-item">🧠 سؤال <b id="recallQ">1</b> / <b id="recallTotal">?</b></div></div>
+    <div class="recall-card">
+      <div id="recallCatBadge" class="exam-cat-badge" style="margin-bottom:14px"></div>
+      <div class="exam-en" id="recallEn"></div>
+      <div class="exam-ar" id="recallAr"></div>
+      <div class="exam-slide" id="recallSlide" style="margin-bottom:14px"></div>
+      <input type="text" class="recall-input" id="recallInput" placeholder="اكتب اسم المصطلح هنا..." autocomplete="off"/>
+      <button id="recallShowBtn" onclick="revealRecall()">🔍 اكشف الإجابة</button>
+      <div class="recall-reveal" id="recallReveal"><div class="recall-answer-text" id="recallAnsText"></div><div class="recall-mnemonic" id="recallMnem"></div>
+        <div class="recall-self-btns"><button class="recall-self-btn correct-self" onclick="recallJudge(true)">✅ كنت صح</button><button class="recall-self-btn wrong-self" onclick="recallJudge(false)">❌ كنت غلط</button></div>
+      </div>
+      <button id="recallNextBtn" onclick="nextRecallQ()">التالي ➡️</button>
+    </div>
+  </div>
+  <div id="diffsMode">
+    <div class="exam-meta"><div class="exam-meta-item">⚡ فرق <b id="diffsQ">1</b> / <b id="diffsTotal">?</b></div></div>
+    <div class="diffs-quiz-card">
+      <div class="diffs-q-title" id="diffsQTitle"></div>
+      <div class="diffs-options" id="diffsOptions"></div>
+      <div class="diffs-explain" id="diffsExplain"></div>
+      <button id="diffsNextBtn" onclick="nextDiffsQ()">التالي ➡️</button>
+    </div>
+  </div>
+  <div class="score" id="scoreBubble">🎯 <span id="s">0</span> / <span id="t">0</span></div>
+  <div class="footer"><div class="signature">🎓 إعداد: بدر الدوسري</div><div style="font-style:italic">دعواتكم الصالحة في ظهر الغيب 🤲</div><div style="margin-top:10px;font-size:.8rem">📚 Symmetric Encryption<br/>جامعة الإمام محمد بن سعود الإسلامية</div></div>
+
+<script>
+/* ══════════════════════════════════════════
+   CORE UTILITIES
+══════════════════════════════════════════ */
+function cleanCite(s){return s?s.replace(/\]*\]/g,'').trim():s}
+let isMuted=false,isLight=false,toastTimer=null;
+function toggleMute(){isMuted=!isMuted;const b=document.getElementById("muteBtn");b.textContent=isMuted?"🔇":"🔊";b.classList.toggle("muted",isMuted);showToast(isMuted?"🔇 كتم الصوت":"🔊 تفعيل الصوت")}
+function toggleTheme(){isLight=!isLight;document.body.classList.toggle("light",isLight);showToast(isLight?"☀️ وضع نهاري":"🌙 وضع ليلي")}
+function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200)}
+
+const AudioContext=window.AudioContext||window.webkitAudioContext,audioCtx=new AudioContext();
+function playSound(ok){if(isMuted)return;if(audioCtx.state==="suspended")audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);if(ok){o.type="sine";o.frequency.setValueAtTime(600,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(1200,audioCtx.currentTime+.12);o.frequency.exponentialRampToValueAtTime(1600,audioCtx.currentTime+.22);g.gain.setValueAtTime(.12,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.4)}else{o.type="sawtooth";o.frequency.setValueAtTime(280,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(130,audioCtx.currentTime+.25);g.gain.setValueAtTime(.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.3)}o.start();o.stop(audioCtx.currentTime+.45)}
+function playStreakSound(level){if(isMuted)return;if(audioCtx.state==="suspended")audioCtx.resume();const notes=level>=10?[523,659,784,1047]:[440,554,659];notes.forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type="sine";o.frequency.setValueAtTime(f,audioCtx.currentTime+i*.1);g.gain.setValueAtTime(.1,audioCtx.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+i*.1+.3);o.start(audioCtx.currentTime+i*.1);o.stop(audioCtx.currentTime+i*.1+.35)})}
+
+let startTime=null,timerInterval=null,correctCount=0,wrongCount=0,streakCount=0,bestStreak=0,hintsUsed=0;
+const termFails={},answerTimes=[];
+function startTimer(){if(!timerInterval){startTime=Date.now();timerInterval=setInterval(()=>{const e=Math.floor((Date.now()-startTime)/1000);document.getElementById("timer").textContent=String(Math.floor(e/60)).padStart(2,"0")+":"+String(e%60).padStart(2,"0")},1000)}}
+function updateAcc(){const t=correctCount+wrongCount;document.getElementById("accuracy").textContent=(t===0?100:Math.round(correctCount/t*100))+"%"}
+function updateStreak(ok){streakCount=ok?streakCount+1:0;if(streakCount>bestStreak)bestStreak=streakCount;document.getElementById("streak").textContent=streakCount;if(ok&&(streakCount===5||streakCount===10||streakCount===15||streakCount===20)){celebrateStreak(streakCount)}}
+function celebrateStreak(n){playStreakSound(n);const b=document.getElementById("streakBanner");b.className="streak-banner "+(n>=10?"streak-10":"streak-5");b.textContent=n>=10?`🔥🔥 ستريك ${n}! أسطوري! 🔥🔥`:`🔥 ستريك ${n}! حماس! 🔥`;b.classList.add("show");setTimeout(()=>{b.classList.remove("show")},1200);const mini={particleCount:n>=10?40:20,spread:n>=10?100:60,startVelocity:25,ticks:40,zIndex:301,colors:n>=10?["#6366f1","#ec4899","#fbbf24"]:["#f59e0b","#ef4444","#00d4b4"]};confetti({...mini,origin:{x:.5,y:.4}})}
+function getElapsed(){if(!startTime)return"00:00";const e=Math.floor((Date.now()-startTime)/1000);return String(Math.floor(e/60)).padStart(2,"0")+":"+String(e%60).padStart(2,"0")}
+function bumpScore(){score++;document.getElementById("s").textContent=score;document.getElementById("bar").style.width=(score/total)*100+"%";const b=document.getElementById("scoreBubble");b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")}
+
+/* ══════════════════════════════════════════
+   📚 البيانات
+══════════════════════════════════════════ */
+const items=[
+// القسم الأول: Basics & Operations
+{cat:"Ch2 - Basics & Concepts",term:"📝 Plaintext",rawTerm:"Plaintext",en:"Readable data before it gets encrypted.",ar:"البيانات بصيغتها المقروءة والعادية قبل لا تتشفر.",slideText:"Encryption is a method of transforming readable data, called plaintext",slide:3,details:"• هي المعلومات بشكلها الأساسي والمفهوم.",mnemonic:"سوالفكم العادية بالواتس قبل التشفير"},
+{cat:"Ch2 - Basics & Concepts",term:"🔣 Ciphertext",rawTerm:"Ciphertext",en:"Data transformed into a form that appears to be random and unreadable.",ar:"النص بعد التشفير، يصير غير مفهوم ومبهم.",slideText:"into a form that appears to be random and unreadable, which is called ciphertext",slide:3,details:"• نتيجة عملية التشفير\n• ما يقدر يفهمه إلا اللي معه المفتاح",mnemonic:"الرسالة بعد ما تتشفر وتصير طلاسم"},
+{cat:"Ch2 - Basics & Concepts",term:"🔐 Encryption",rawTerm:"Encryption",en:"A method of transforming readable data (plaintext) into an unreadable form (ciphertext).",ar:"تحويل البيانات المقروءة إلى نص عشوائي غير مقروء للحماية.",slideText:"Encryption is a method of transforming readable data, called plaintext, into a form that appears to be random and unreadable",slide:3,details:"• يحمي البيانات المرسلة عبر الشبكة من المتطفلين\n• العملية المعاكسة تسمى Decryption",mnemonic:"قفل الكلام بكود محد يفكه إلا خويك"},
+{cat:"Ch2 - Basics & Concepts",term:"🛠️ Cryptosystem",rawTerm:"Cryptosystem",en:"A system or product that provides encryption and decryption, using an encryption algorithm.",ar:"النظام أو المنتج الكامل اللي يوفر التشفير وفك التشفير.",slideText:"A system or product that provides encryption and decryption is referred to as a cryptosystem",slide:5,details:"• يتكون من هاردوير أو كود برمجي\n• يستخدم خوارزمية التشفير (Encryption algorithm)",mnemonic:"السيستم كامل اللي يضبط التشفير وفكه بمكان واحد"},
+{cat:"Ch2 - Basics & Concepts",term:"🧩 Keyspace",rawTerm:"Keyspace",en:"The range of possible values that can be used to construct a key.",ar:"عدد الاحتمالات والقيم المتوفرة لتكوين مفتاح التشفير.",slideText:"The larger the keyspace, the more available values can be used to represent different keys",slide:8,details:"• كل ما كبر الفضاء، صار المفتاح أقوى وصعب اختراقه",mnemonic:"عدد الاحتمالات بقفل الشنطة، زادت الأرقام صعبت الفتحة"},
+{cat:"Ch2 - Basics & Concepts",term:"🔄 Substitution",rawTerm:"Substitution",en:"A cryptographic operation where each element in the plaintext is mapped into another element.",ar:"عملية تشفير تعتمد على تبديل حرف أو عنصر بآخر.",slideText:"Each element in the plaintext is mapped into another element",slide:9,details:"• أحد العمليات الأساسية في التشفير",mnemonic:"تبديل لاعب بلاعب بالملعب، حرف مكان حرف"},
+{cat:"Ch2 - Basics & Concepts",term:"🔀 Transposition",rawTerm:"Transposition",en:"A cryptographic operation where elements in the plaintext are rearranged.",ar:"عملية تشفير تعتمد على تغيير وتلخبط ترتيب العناصر.",slideText:"Elements in the plaintext are rearranged",slide:9,details:"• لا يتم تغيير الحروف، بل فقط أماكنها",mnemonic:"تلخبط ترتيب الكراسي بالاستراحة"},
+
+// القسم الثاني: Algorithms & Ciphers
+{cat:"Ch2 - Algorithms & Ciphers",term:"🔑 Symmetric Alg.",rawTerm:"Symmetric Algorithm",en:"An algorithm where the sender and receiver use the same secret key.",ar:"خوارزمية تستخدم نفس المفتاح السري للتشفير وفك التشفير.",slideText:"Referred to as symmetric, single-key, secret-key, or conventional encryption if both sender and receiver use the same key",slide:9,details:"• يسمى التشفير التقليدي (Conventional)\n• يتطلب مشاركة المفتاح بأمان",mnemonic:"مفتاح بيتكم، يفتح الباب ويسكره بنفس المفتاح"},
+{cat:"Ch2 - Algorithms & Ciphers",term:"🗝️ Asymmetric Alg.",rawTerm:"Asymmetric Algorithm",en:"An algorithm that uses two different keys, public and private keys.",ar:"خوارزمية تستخدم مفتاحين مختلفين: عام وخاص.",slideText:"Referred to as asymmetric, two-key, or public-key encryption if the sender and receiver each use a different key",slide:9,details:"• يسمى تشفير المفتاح العام\n• يحل مشكلة تبادل المفاتيح",mnemonic:"صندوق البريد، الكل يحط رسايل (عام) بس أنت تفتح بمفتاحك (خاص)"},
+{cat:"Ch2 - Algorithms & Ciphers",term:"📦 Block Cipher",rawTerm:"Block Cipher",en:"Processes the plaintext input in fixed-sized blocks all at once.",ar:"تشفير يعالج البيانات ككتل أو بلوكات ثابتة الحجم.",slideText:"Block cipher processes the input one block of elements at a time, producing an output block",slide:9,details:"• ينتج بلوك مشفر بنفس حجم البلوك الأصلي\n• أمثلة: AES و DES",mnemonic:"شركة شحن تنقل البضاعة بكراتين كاملة"},
+{cat:"Ch2 - Algorithms & Ciphers",term:"🌊 Stream Cipher",rawTerm:"Stream Cipher",en:"Processes the input elements continuously, producing output one element at a time.",ar:"تشفير يعالج البيانات بشكل متواصل، عنصر ورا عنصر.",slideText:"Stream cipher processes the input elements continuously, producing output one element at a time, as it goes along",slide:9,details:"• أسرع في بعض الحالات من البلوك\n• أمثلة: RC4",mnemonic:"زي وايت الموية يصب لك بشكل مستمر"},
+{cat:"Ch2 - Algorithms & Ciphers",term:"⚙️ DES",rawTerm:"DES",en:"A legacy symmetric block cipher that uses a 56-bit key and 64-bit blocks.",ar:"خوارزمية تشفير قديمة تعتمد على مفتاح 56-بت وتعتبر غير آمنة الآن.",slideText:"The use of a 56-bit key. Speed of commercial, off-the-shelf processors threatens the security",slide:13,details:"• تم اعتماده عام 1977\n• يُنصح بالانتقال منه لـ 3DES",mnemonic:"دباب قديم كان يمشيك زمان بس الحين ما يخارج"},
+{cat:"Ch2 - Algorithms & Ciphers",term:"🛡️ 3DES",rawTerm:"3DES",en:"Triple DES uses multiple stages to provide better security than original DES.",ar:"تشفير يستخدم خوارزمية DES ثلاث مرات لزيادة الأمان.",slideText:"Government organizations with legacy DES systems are encouraged to transition to 3DES",slide:19,details:"• يعتبر الخيار الآمن للأنظمة القديمة اللي تدعم DES\n• معتمد من الـ FIPS",mnemonic:"حماية ثلاثية، قفل ورا قفل ورا قفل"},
+{cat:"Ch2 - Algorithms & Ciphers",term:"🚀 AES",rawTerm:"AES",en:"Advanced symmetric block cipher with 128-bit blocks and keys of 128, 192, or 256 bits.",ar:"خوارزمية التشفير الحديثة والمطورة اللي تدعم بلوكات 128 بت.",slideText:"Must be a symmetric block cipher with a block length of 128 bits and support for key lengths of 128, 192, and 256 bits",slide:20,details:"• تم تطويرها باسم Rijndael\n• هي المعيار الحالي المعتمد عالمياً",mnemonic:"سيارة ألمانية جديدة فل أوبشن، أقوى وأسرع أمان"},
+
+// القسم الثالث: Modes & Randomness
+{cat:"Ch2 - Modes & Randomness",term:"📖 ECB Mode",rawTerm:"ECB Mode",en:"Electronic Code Book: identical plaintext blocks always produce identical ciphertext.",ar:"وضعية تنتج نفس النص المشفر إذا تكرر النص الأصلي، غير آمنة للرسائل الطويلة.",slideText:"With ECB, if the same b-bit block of plaintext appears more than once in the message, it always produces the same ciphertext",slide:24,details:"• سهل اختراقه إذا كانت الرسالة مهيكلة\n• يعمل ككتاب كود ثابت",mnemonic:"تطبع نفس الورقة ألف مرة، يقفطون النمط بسرعة"},
+{cat:"Ch2 - Modes & Randomness",term:"🔗 CBC Mode",rawTerm:"CBC Mode",en:"Cipher Block Chaining extracts ciphertext from previous blocks to chain them together.",ar:"وضعية تربط البلوكات ببعض باستخدام نتيجة البلوك السابق.",slideText:"Ciphertext is extracted and used from the previous block of text. This provides dependence between the blocks, in a sense chaining them together",slide:25,details:"• يمنع الأنماط المتكررة في التشفير\n• يستخدم Initial Vector (IV) في البداية",mnemonic:"سلسلة سيارات ساحبين بعض، مسار كل سيارة مربوط باللي قبلها"},
+{cat:"Ch2 - Modes & Randomness",term:"📡 CFB Mode",rawTerm:"CFB Mode",en:"Cipher Feedback is used when sending a steady stream of data instead of large chunks.",ar:"وضعية تستخدم للبيانات المستمرة بدل البلوكات الكبيرة.",slideText:"But what if you are not sending large chunks of data at one time, but instead are sending a steady stream of data to a destination?",slide:27,details:"• يحول الـ Block Cipher للعمل كأنه Stream Cipher",mnemonic:"بث مباريات مباشر، البيانات تجيك كتيار مستمر"},
+{cat:"Ch2 - Modes & Randomness",term:"🔢 CTR Mode",rawTerm:"CTR Mode",en:"Counter mode enables hardware and software efficiency by encrypting in parallel.",ar:"وضعية تعتمد على عداد وتسمح بمعالجة البلوكات بالتوازي.",slideText:"Encryption/decryption can be done in parallel on multiple blocks of plaintext or ciphertext",slide:30,details:"• يوفر أداء وكفاءة عالية جداً\n• يسمح بالوصول العشوائي (Random access)",mnemonic:"كاشير العثيم فاتح 5 مسارات يحاسبون الناس بوقت واحد"},
+{cat:"Ch2 - Modes & Randomness",term:"⏱️ Nonces",rawTerm:"Nonces",en:"Random numbers used in authentication protocols to prevent replay attacks.",ar:"أرقام عشوائية تستخدم مرة واحدة في بروتوكولات المصادقة لمنع هجمات الإعادة.",slideText:"Nonces in authentication protocols to prevent replay",slide:31,details:"• تستخدم لمرة واحدة فقط\n• تضمن أن الرسالة أو الجلسة جديدة وغير مسجلة",mnemonic:"رمز تحقق يوصلك SMS ويخلص بعد دقيقة واحدة"},
+{cat:"Ch2 - Modes & Randomness",term:"🎲 TRNG",rawTerm:"TRNG",en:"True Random Number Generator takes a source of true randomness and converts it to binary.",ar:"مولد أرقام عشوائية حقيقية 100% مبني على مصادر عشوائية فعلية.",slideText:"TRNG = true random number generator. Source of true randomness -> Conversion to binary",slide:34,details:"• لا يمكن التنبؤ بها أبداً\n• تعتمد على ظواهر فيزيائية",mnemonic:"عشوائية حقيقية من الطبيعة محد يقدر يتوقعها أبداً"},
+{cat:"Ch2 - Modes & Randomness",term:"🤖 PRNG",rawTerm:"PRNG",en:"Pseudorandom Number Generator uses a deterministic algorithm with a seed to produce a stream.",ar:"مولد أرقام شبه عشوائية يستخدم خوارزمية وبذرة (Seed) للعمل.",slideText:"PRNG = pseudorandom number generator. Seed -> Deterministic algorithm",slide:34,details:"• تبدو عشوائية ولكنها مبرمجة\n• إذا عرفت البذرة والخوارزمية، تقدر تتوقع النتيجة",mnemonic:"عشوائية كمبيوتر مبرمجة بناءً على بذرة (Seed)"},
+{cat:"Ch2 - Modes & Randomness",term:"🛠️ PRF",rawTerm:"PRF",en:"Pseudorandom Function uses context-specific seed values to generate a pseudorandom value.",ar:"دالة تطلع قيمة شبه عشوائية محددة بناءً على سياق وبذرة.",slideText:"PRF = pseudorandom function. Context-specific Seed values -> Deterministic algorithm",slide:34,details:"• تنتج قيمة محددة (Value) وليس تيار مستمر (Stream)\n• تستخدم في مفاتيح الجلسات (Session keys)",mnemonic:"دالة تبرمج لك رقم شبه عشوائي حسب الطلب لحالة محددة"}
+];
+
+/* ══════════════════════════════════════════
+   ⚡ الفروقات
+══════════════════════════════════════════ */
+const diffs=[
+{title:"Symmetric vs Asymmetric",terms:["Symmetric","Asymmetric"],enA:"Uses the same secret key for both encryption and decryption.",arA:"نفس المفتاح السري يُستخدم للتشفير وفكه للطرفين.",enB:"Uses two different keys (public and private).",arB:"تستخدم مفتاحين مختلفين (عام وخاص).",tip:"المتماثل مفتاح بيتكم لك ولأهلك، الغير متماثل صندوق بريد الكل يرسل لك بس أنت تفتحه بمفتاحك."},
+{title:"Block Cipher vs Stream Cipher",terms:["Block Cipher","Stream Cipher"],enA:"Processes the input in fixed-sized blocks all at once.",arA:"يعالج البيانات ويشفرها على شكل كتل أو بلوكات ثابتة.",enB:"Processes the input continuously, one element at a time.",arB:"يعالج البيانات كتيار متواصل حبة حبة باستمرار.",tip:"البلوك سيارة شحن تنقل كراتين مليانة، الستريم وايت موية يصب لك متواصل."},
+{title:"ECB Mode vs CBC Mode",terms:["ECB Mode","CBC Mode"],enA:"Produces the same ciphertext for identical plaintext blocks.",arA:"لو تكررت الكلمة بالرسالة بيطلع نفس تشفيرها بالضبط.",enB:"Chains blocks, using previous ciphertext to alter the next one.",arB:"يربط كل بلوك باللي قبله، مستحيل يتكرر نفس شكل التشفير.",tip:"الـ ECB يفضح النمط لو تكرر الكلام، الـ CBC يغير الشكل ويربطهم ببعض عشان يضيع المخترق."},
+{title:"Substitution vs Transposition",terms:["Substitution","Transposition"],enA:"Each element in the plaintext is mapped into another element.",arA:"يستبدل الحرف أو العنصر بعنصر آخر تماماً.",enB:"Elements in the plaintext are merely rearranged.",arB:"يعيد ترتيب نفس العناصر أو الحروف بدون ما يستبدلها.",tip:"السبستتيوشن تبديل لاعب بالملعب، الترانسبوزشن تلخبط كراسي الجالسين فقط."},
+{title:"TRNG vs PRNG",terms:["TRNG","PRNG"],enA:"Takes a source of true randomness (physical phenomenon).",arA:"عشوائية حقيقية من مصدر فيزيائي فعلي.",enB:"Uses a deterministic algorithm with a seed.",arB:"شبه عشوائية من خوارزمية مبرمجة وبذرة (Seed).",tip:"TRNG رمية نرد حقيقية بيدك، PRNG رمية نرد مبرمجة بلعبة بلايستيشن."}
+];
+
+const chapters=[...new Set(items.map(i=>i.cat))];
+const palette=["#0d9488","#6366f1","#b45309","#be185d","#0369a1","#15803d"];
+const colors={};chapters.forEach((c,i)=>colors[c]=palette[i%palette.length]);
+let score=0;const total=items.length;let currentChapterIndex=0;
+const chapterScores={};
+document.getElementById("t").textContent=total;
+items.forEach(it=>termFails[it.term]=0);
+function shuffle(a){return[...a].sort(()=>Math.random()-.5)}
+
+/* ══ LEITNER SR ══ */
+const srBox={};
+items.forEach(it=>srBox[it.term]={box:0,dueIn:0});
+const SR_INT=[0,2,5,12,25];
+function srOK(t){const s=srBox[t];s.box=Math.min(s.box+1,4);s.dueIn=SR_INT[s.box]}
+function srFail(t){srBox[t].box=0;srBox[t].dueIn=2}
+
+/* ══ CHUNKING ══ */
+const CHUNK=4;let currentChunk=0,chunkOK=0,chunkItems=[];
+const chapShuffled={};chapters.forEach(ch=>{chapShuffled[ch]=shuffle(items.filter(i=>i.cat===ch))});
+function chunkCount(ci){return Math.ceil(chapShuffled[chapters[ci]].length/CHUNK)}
+function getChunk(){const a=chapShuffled[chapters[currentChapterIndex]];return a.slice(currentChunk*CHUNK,currentChunk*CHUNK+CHUNK)}
+
+let drag=null,activeTouchPill=null;
+const ghost=document.getElementById("touchGhost"),termsBox=document.getElementById("termsBox"),quiz=document.getElementById("quiz");
+
+function attachDD(p,t){p.draggable=true;p.addEventListener("dragstart",e=>{startTimer();drag=p;e.dataTransfer.setData("text/plain",t);setTimeout(()=>p.style.opacity=.35,0)});p.addEventListener("dragend",()=>{p.style.opacity=1;drag=null})}
+function attachTD(p,t,c){p.addEventListener("touchstart",e=>{if(activeTouchPill&&activeTouchPill!==p){activeTouchPill.style.transform="";activeTouchPill.style.opacity=""}startTimer();drag=p;activeTouchPill=p;p.style.opacity="0.4";p.style.transform="scale(0.95)";const tc=e.touches[0];ghost.textContent=t;ghost.style.background=c;ghost.style.display="block";ghost.style.left=tc.clientX+"px";ghost.style.top=tc.clientY+"px";e.preventDefault()},{passive:false});p.addEventListener("touchmove",e=>{if(drag!==p)return;const tc=e.touches[0];ghost.style.left=tc.clientX+"px";ghost.style.top=tc.clientY+"px";ghost.style.display="none";const el=document.elementFromPoint(tc.clientX,tc.clientY);ghost.style.display="block";document.querySelectorAll(".zone").forEach(z=>z.classList.remove("hover"));const z=el&&el.closest(".zone");if(z&&!z.classList.contains("correct"))z.classList.add("hover");e.preventDefault()},{passive:false});p.addEventListener("touchend",e=>{if(drag!==p)return;const tc=e.changedTouches[0];ghost.style.display="none";p.style.opacity="";p.style.transform="";const el=document.elementFromPoint(tc.clientX,tc.clientY);const z=el&&el.closest(".zone");document.querySelectorAll(".zone").forEach(z=>z.classList.remove("hover"));if(z)z.dispatchEvent(new CustomEvent("touchdrop",{detail:{term:t}}));drag=null;activeTouchPill=null;e.preventDefault()},{passive:false})}
+
+function loadChunkPills(){termsBox.innerHTML="";chunkItems=getChunk();chunkOK=0;shuffle([...chunkItems]).forEach(it=>{const p=document.createElement("div");p.className="pill";p.textContent=it.term;p.dataset.term=it.term;p.style.background=colors[it.cat];attachDD(p,it.term);attachTD(p,it.term,colors[it.cat]);termsBox.appendChild(p)})}
+
+function mkDots(ci){const n=chunkCount(ci);let h='<div class="chunk-progress"><span class="chunk-lbl">📦 المجموعات:</span><div class="chunk-dots">';for(let i=0;i<n;i++){h+=`<div class="chunk-dot ${i<currentChunk?'done':i===currentChunk?'active':''}"></div>`}return h+'</div></div>'}
+function updDots(){const d=document.querySelector(`#chap-${currentChapterIndex} .chunk-dots`);if(!d)return;d.querySelectorAll('.chunk-dot').forEach((x,i)=>{x.className='chunk-dot';if(i<currentChunk)x.classList.add('done');else if(i===currentChunk)x.classList.add('active')})}
+
+chapters.forEach((ch,idx)=>{chapterScores[ch]=0;const ci=chapShuffled[ch];const s=document.createElement("section");s.className=`chapter ${idx===0?"active":""}`;s.id=`chap-${idx}`;s.innerHTML=`<div class="ch-header" style="background:${colors[ch]}"><span>${ch}</span><span class="ch-badge">القسم ${idx+1}/${chapters.length} · ${ci.length} مصطلحات</span></div>`;const dd=document.createElement("div");dd.innerHTML=mkDots(idx);s.appendChild(dd.firstElementChild);const g=document.createElement("div");g.className="grid";g.id=`grid-${idx}`;s.appendChild(g);quiz.appendChild(s)});
+
+function renderCards(){const g=document.getElementById(`grid-${currentChapterIndex}`);g.innerHTML="";const chunk=getChunk(),ch=chapters[currentChapterIndex];
+shuffle([...chunk]).forEach(it=>{const card=document.createElement("div");card.className="card";
+const stripe=document.createElement("div");stripe.className="card-stripe";stripe.style.background=`linear-gradient(90deg,${colors[it.cat]},transparent)`;card.appendChild(stripe);
+const en=document.createElement("div");en.className="en";en.textContent=cleanCite(it.en);card.appendChild(en);
+const ar=document.createElement("div");ar.className="ar";ar.textContent=cleanCite(it.ar);card.appendChild(ar);
+if(it.slide||it.details){const det=document.createElement("div");det.className="details-block";if(it.slide){const sr=document.createElement("div");sr.className="slide-ref";sr.textContent=`📄 Slide ${it.slide}`;det.appendChild(sr)}if(it.details){const dt=document.createElement("div");dt.className="details-text";dt.innerHTML=cleanCite(it.details).replace(/\n/g,"<br>");det.appendChild(dt)}card.appendChild(det)}
+const zone=document.createElement("div");zone.className="zone";zone.textContent="أفلت المصطلح هنا";zone.dataset.target=it.term;zone.dataset.cat=it.cat;
+const hint=document.createElement("div");hint.className="hint";hint.innerHTML=`🧠 <b>رابط ذهني:</b> ${it.mnemonic}`;
+function handleDrop(term){zone.classList.remove("hover");if(zone.classList.contains("correct")||!term)return;
+if(term===zone.dataset.target){playSound(true);zone.classList.add("correct");zone.textContent=term;zone.style.background=colors[zone.dataset.cat];zone.style.borderColor=colors[zone.dataset.cat];document.querySelectorAll(".pill").forEach(p=>{if(p.dataset.term===term)p.style.display="none"});
+hint.classList.add("correct-hint");hint.innerHTML=`✅ <b>أحسنت! تذكّر:</b> ${it.mnemonic}`;hint.style.display="block";setTimeout(()=>{hint.style.display="none"},3000);
+correctCount++;updateStreak(true);updateAcc();bumpScore();chapterScores[ch]++;chunkOK++;
+if(chunkOK===chunk.length){const tc=chunkCount(currentChapterIndex);if(currentChunk<tc-1){document.getElementById("nextChunkBtn").style.display="inline-block";showToast(`📦 أنهيت المجموعة ${currentChunk+1} من ${tc}!`)}else{if(currentChapterIndex<chapters.length-1){document.getElementById("nextBtn").style.display="inline-block";showToast(`🎉 أنهيت ${ch}!`)}else{document.getElementById("termsContainer").style.display="none";document.getElementById("reset").style.display="inline-block";clearInterval(timerInterval);triggerWin();setTimeout(showResults,1800)}}}}
+else{playSound(false);zone.classList.add("wrong");const prev=zone.textContent;zone.textContent="❌ أعد المحاولة";termFails[it.term]++;wrongCount++;updateStreak(false);updateAcc();hint.classList.remove("correct-hint");hint.innerHTML=`🧠 <b>رابط ذهني:</b> ${it.mnemonic}`;hint.style.display="block";setTimeout(()=>{zone.classList.remove("wrong");zone.textContent=prev},900)}}
+zone.ondragover=e=>{e.preventDefault();if(!zone.classList.contains("correct"))zone.classList.add("hover")};zone.ondragleave=()=>zone.classList.remove("hover");zone.ondrop=e=>{e.preventDefault();handleDrop(e.dataTransfer.getData("text/plain")||(drag&&drag.dataset.term))};zone.addEventListener("touchdrop",e=>handleDrop(e.detail.term));
+card.appendChild(zone);card.appendChild(hint);
+if(it.slideText){const sb=document.createElement("button");sb.className="slide-orig-btn";sb.innerHTML=`<span class="s-chevron">▼</span> نص السلايد الأصلي`;const sr=document.createElement("div");sr.className="slide-orig-reveal";sr.innerHTML=`<span class="slide-orig-lbl">📄 النص الحرفي من السلايد</span>${cleanCite(it.slideText)}`;sb.onclick=()=>{const open=!sr.classList.contains("show");sr.classList.toggle("show",open);sb.classList.toggle("open",open);sb.childNodes[1].textContent=open?" إخفاء النص":" نص السلايد الأصلي"};card.appendChild(sb);card.appendChild(sr)}
+g.appendChild(card)})}
+
+renderCards();loadChunkPills();
+
+function advanceChunk(){currentChunk++;document.getElementById("nextChunkBtn").style.display="none";updDots();renderCards();loadChunkPills();window.scrollTo({top:document.getElementById(`chap-${currentChapterIndex}`).offsetTop-60,behavior:"smooth"})}
+function nextChapter(){document.getElementById(`chap-${currentChapterIndex}`).classList.remove("active");currentChapterIndex++;currentChunk=0;document.getElementById(`chap-${currentChapterIndex}`).classList.add("active");document.getElementById("nextBtn").style.display="none";document.getElementById("nextChunkBtn").style.display="none";renderCards();loadChunkPills();updDots();window.scrollTo({top:0,behavior:"smooth"})}
+
+/* ══════════════════════════════════════════
+   EXAM MODE
+══════════════════════════════════════════ */
+let examQueue=[],examIdx=0,examAnswered=false,srPending={},cdInterval=null,hintStep=0,examStarted=false,curConf=0,examTimerEnabled=true,questionStartTime=0;
+function switchMode(m){document.getElementById("normalMode").style.display=m==='normal'?"block":"none";const em=document.getElementById("examMode"),rm=document.getElementById("recallMode"),dm=document.getElementById("diffsMode");em.style.display=m==='exam'?'':'none';rm.style.display=m==='recall'?'':'none';dm.style.display=m==='diffs'?'':'none';m==='exam'?em.classList.add("active"):em.classList.remove("active");m==='recall'?rm.classList.add("active"):rm.classList.remove("active");m==='diffs'?dm.classList.add("active"):dm.classList.remove("active");document.getElementById("btnNormal").classList.toggle("active",m==='normal');document.getElementById("btnExam").classList.toggle("active",m==='exam');document.getElementById("btnRecall").classList.toggle("active",m==='recall');document.getElementById("btnDiffs").classList.toggle("active",m==='diffs');if(m==='exam'&&!examStarted){examStarted=true;initExam()}if(m==='recall'&&!recallStarted){recallStarted=true;initRecall()}if(m==='diffs'&&!diffsStarted){diffsStarted=true;initDiffsQuiz()}window.scrollTo({top:0,behavior:"smooth"})}
+function setConf(l,b){curConf=l;document.querySelectorAll('.conf-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}
+function toggleExamTimer(){examTimerEnabled=!examTimerEnabled;const btn=document.getElementById("timerToggle");const wrap=document.getElementById("countdownWrap");if(examTimerEnabled){btn.textContent="⏱️ المؤقت: مفعّل";btn.classList.remove("off");wrap.style.display=""}else{btn.textContent="⏱️ المؤقت: متوقف";btn.classList.add("off");wrap.style.display="none";clearInterval(cdInterval)}}
+
+function initExam(){startTimer();items.forEach(it=>srPending[it.term]=0);const byCh={};chapters.forEach(ch=>byCh[ch]=shuffle(items.filter(i=>i.cat===ch)));examQueue=[];const mx=Math.max(...chapters.map(ch=>byCh[ch].length));for(let i=0;i<mx;i++)chapters.forEach(ch=>{if(byCh[ch][i])examQueue.push(byCh[ch][i])});renderExamQ()}
+function getAdTime(it){return Math.min(15+(it.details||'').split('\n').filter(l=>l.trim()).length*2,25)}
+
+function renderExamQ(){if(examIdx>=examQueue.length){const has=items.some(it=>srPending[it.term]>0);if(!has){clearInterval(cdInterval);triggerWin();setTimeout(showExamRes,1500);return}const due=items.filter(it=>srPending[it.term]>0);examQueue=[...examQueue,...shuffle(due.map(it=>({...it,_isSR:true})))];due.forEach(it=>srPending[it.term]=0)}
+examAnswered=false;hintStep=0;curConf=0;questionStartTime=Date.now();document.querySelectorAll('.conf-btn').forEach(b=>b.classList.remove('selected'));const fb=document.getElementById("examFeedback");fb.classList.remove("show","wrong-fb");fb.style.display="none";fb.innerHTML="";
+const it=examQueue[examIdx];document.getElementById("examQ").textContent=examIdx+1;const pend=items.filter(x=>srPending[x.term]>0).length;document.getElementById("examTotal").textContent=examQueue.length+(pend>0?"+":"");document.getElementById("srInfo").style.display=pend>0?"inline-flex":"none";document.getElementById("srCount").textContent=pend;document.getElementById("srBadge").classList.toggle("show",!!it._isSR);
+/* Slide animation */
+const card=document.getElementById("examCard");card.classList.remove("slide-in");void card.offsetWidth;card.classList.add("slide-in");
+document.getElementById("examCatBadge").textContent=it.cat;document.getElementById("examCatBadge").style.background=colors[it.cat];document.getElementById("examEn").textContent=cleanCite(it.en);document.getElementById("examAr").textContent=cleanCite(it.ar);document.getElementById("examSlide").textContent=it.slide?`📄 Slide ${it.slide}`:"";
+["hint1","hint2","hint3"].forEach(id=>document.getElementById(id).classList.remove("show"));document.getElementById("hint1Text").textContent=it.rawTerm.charAt(0)+" ...";document.getElementById("hint2Text").textContent=it.mnemonic;document.getElementById("hint3Text").textContent=it.term;document.getElementById("hintLevelNum").textContent="1";document.getElementById("hintBtn").disabled=false;
+const w3=shuffle(items.filter(x=>x.term!==it.term)).slice(0,3),opts=shuffle([it,...w3]);const pe=document.getElementById("examPills");pe.innerHTML="";pe.classList.remove("slide-in");void pe.offsetWidth;pe.classList.add("slide-in");
+opts.forEach((op,idx)=>{const b=document.createElement("button");b.className="exam-pill";b.innerHTML=`${op.term} <span class="kb-badge">${idx+1}</span>`;b.dataset.term=op.term;b.onclick=()=>handleExamPick(op.term,it,b);pe.appendChild(b)});
+document.getElementById("examNextBtn").classList.remove("show");if(examTimerEnabled)startCD(it)}
+
+function startCD(it){clearInterval(cdInterval);let mx=getAdTime(it),sec=mx;const bar=document.getElementById("countdownBar"),num=document.getElementById("countdownNum");bar.style.width="100%";bar.style.background="linear-gradient(90deg,#00d4b4,#6366f1)";num.textContent=sec;cdInterval=setInterval(()=>{sec--;num.textContent=sec;const p=sec/mx*100;bar.style.width=p+"%";if(p<=33)bar.style.background="linear-gradient(90deg,#f43f5e,#f59e0b)";else if(p<=60)bar.style.background="linear-gradient(90deg,#f59e0b,#6366f1)";if(sec<=0){clearInterval(cdInterval);if(!examAnswered)onTimeout(it)}},1000)}
+function onTimeout(it){examAnswered=true;playSound(false);wrongCount++;termFails[it.term]++;updateStreak(false);updateAcc();srFail(it.term);srPending[it.term]=2;document.getElementById("countdownNum").textContent="⏰";document.querySelectorAll(".exam-pill").forEach(b=>{if(b.dataset.term===it.term)b.classList.add("correct-anim");b.disabled=true});showFB(null,it);revealAllH();document.getElementById("examNextBtn").classList.add("show");showToast("⏰ انتهى الوقت!")}
+
+function handleExamPick(sel,it,btn){if(examAnswered)return;examAnswered=true;clearInterval(cdInterval);answerTimes.push((Date.now()-questionStartTime)/1000);document.querySelectorAll(".exam-pill").forEach(b=>b.disabled=true);
+if(sel===it.term){btn.classList.add("correct-anim");playSound(true);correctCount++;updateStreak(true);updateAcc();bumpScore();srOK(it.term);srPending[it.term]=0;showFB(it.term,it);showToast("✅ صح!")}
+else{btn.classList.add("wrong-anim");document.querySelectorAll(".exam-pill").forEach(b=>{if(b.dataset.term===it.term)b.classList.add("correct-anim")});playSound(false);wrongCount++;termFails[it.term]++;updateStreak(false);updateAcc();srFail(it.term);srPending[it.term]=2;showFB(sel,it);revealAllH();showToast("❌ خطأ — سيعود لاحقاً 🔁")}
+document.getElementById("examNextBtn").classList.add("show")}
+
+function showFB(sel,cor){const fb=document.getElementById("examFeedback");fb.style.display="";if(sel===cor.term){fb.className="exam-feedback show";fb.innerHTML=`<div class="fb-title" style="color:#10b981">✅ أحسنت! تذكّر هذا الرابط الذهني:</div><div class="fb-mnemonic">🧠 ${cor.mnemonic}</div>`}
+else{fb.className="exam-feedback show wrong-fb";const wi=sel?items.find(i=>i.term===sel):null;const wc=wi?`<div class="fb-col"><div class="fb-col-label wrong-lbl">❌ اخترت</div><div class="fb-col-term">${wi.term}</div><div class="fb-col-def">${cleanCite(wi.ar)}</div></div>`:`<div class="fb-col"><div class="fb-col-label wrong-lbl">⏰ انتهى الوقت</div><div class="fb-col-term">لم تجب</div></div>`;
+fb.innerHTML=`<div class="fb-title" style="color:#f43f5e">🔄 قارن الفرق بينهم:</div><div class="fb-row"><div class="fb-col"><div class="fb-col-label correct-lbl">✅ الإجابة الصحيحة</div><div class="fb-col-term">${cor.term}</div><div class="fb-col-def">${cleanCite(cor.ar)}</div></div>${wc}</div><div class="fb-mnemonic">🧠 تذكّر: ${cor.mnemonic}</div>`}}
+
+function nextExamQ(){items.forEach(it=>{if(srPending[it.term]>0)srPending[it.term]--});examIdx++;renderExamQ()}
+function showNextHint(f){if(!f&&document.getElementById("hintBtn").disabled)return;hintStep++;hintsUsed++;if(f)hintStep=3;if(hintStep>=1)document.getElementById("hint1").classList.add("show");if(hintStep>=2)document.getElementById("hint2").classList.add("show");if(hintStep>=3){document.getElementById("hint3").classList.add("show");document.getElementById("hintBtn").disabled=true;document.getElementById("hintLevelNum").textContent="✓"}else document.getElementById("hintLevelNum").textContent=hintStep+1}
+function revealAllH(){showNextHint(true)}
+
+/* ══ KEYBOARD SHORTCUTS ══ */
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("examMode").style.display==="none")return;
+  const key=e.key;
+  /* 1-4 to pick answer */
+  if(!examAnswered&&["1","2","3","4"].includes(key)){
+    const pills=document.querySelectorAll(".exam-pill:not(:disabled)");
+    const idx=parseInt(key)-1;
+    if(pills[idx]){pills[idx].click();e.preventDefault()}
+  }
+  /* H for hint */
+  if(!examAnswered&&(key==="h"||key==="H")){showNextHint();e.preventDefault()}
+  /* Enter or Space for next */
+  if(examAnswered&&(key==="Enter"||key===" ")){nextExamQ();e.preventDefault()}
+});
+
+/* ══════════════════════════════════════════
+   RECALL MODE
+══════════════════════════════════════════ */
+let recallStarted=false,recallQueue=[],recallIdx=0;
+function initRecall(){startTimer();recallQueue=shuffle([...items]);document.getElementById("recallTotal").textContent=recallQueue.length;renderRecallQ()}
+function renderRecallQ(){if(recallIdx>=recallQueue.length){clearInterval(timerInterval);triggerWin();setTimeout(showResults,1500);return}const it=recallQueue[recallIdx];document.getElementById("recallQ").textContent=recallIdx+1;document.getElementById("recallCatBadge").textContent=it.cat;document.getElementById("recallCatBadge").style.background=colors[it.cat];document.getElementById("recallEn").textContent=cleanCite(it.en);document.getElementById("recallAr").textContent=cleanCite(it.ar);document.getElementById("recallSlide").textContent=it.slide?`📄 Slide ${it.slide}`:"";document.getElementById("recallInput").value="";document.getElementById("recallInput").focus();document.getElementById("recallReveal").classList.remove("show");document.getElementById("recallNextBtn").classList.remove("show");document.getElementById("recallNextBtn").style.display="none";document.getElementById("recallShowBtn").style.display=""}
+function revealRecall(){const it=recallQueue[recallIdx];document.getElementById("recallAnsText").textContent=it.term;document.getElementById("recallMnem").textContent=`🧠 ${it.mnemonic}`;document.getElementById("recallReveal").classList.add("show");document.getElementById("recallShowBtn").style.display="none"}
+function recallJudge(ok){const it=recallQueue[recallIdx];if(ok){playSound(true);correctCount++;updateStreak(true);updateAcc();bumpScore();showToast("✅ أحسنت!")}else{playSound(false);wrongCount++;termFails[it.term]++;updateStreak(false);updateAcc();showToast("📝 لا بأس — التكرار يثبت المعلومة")}document.getElementById("recallNextBtn").style.display="";document.getElementById("recallNextBtn").classList.add("show")}
+function nextRecallQ(){recallIdx++;renderRecallQ()}
+document.getElementById("recallInput").addEventListener("keydown",e=>{if(e.key==="Enter")revealRecall()});
+
+/* ══ RESULTS ══ */
+function buildRes(cc,wc){const ta=cc+wc,acc=ta===0?100:Math.round(cc/ta*100),perf=items.filter(it=>termFails[it.term]===0),weak=items.filter(it=>termFails[it.term]>0);
+document.getElementById("resPerfect").textContent=perf.length;document.getElementById("resReview").textContent=weak.length;document.getElementById("resTime").textContent=getElapsed();document.getElementById("resAcc").textContent=acc+"%";setTimeout(()=>document.getElementById("perfBar").style.width=acc+"%",300);
+/* Extra stats */
+document.getElementById("resBestStreak").textContent=bestStreak;
+const avgT=answerTimes.length>0?Math.round(answerTimes.reduce((a,b)=>a+b,0)/answerTimes.length):0;
+document.getElementById("resAvgTime").textContent=avgT+"s";
+document.getElementById("resHints").textContent=hintsUsed;
+/* Per-chapter breakdown */
+const csEl=document.getElementById("chapterStats");csEl.innerHTML="";
+chapters.forEach(ch=>{const chItems=items.filter(i=>i.cat===ch);const chPerf=chItems.filter(i=>termFails[i.term]===0).length;const pct=Math.round(chPerf/chItems.length*100);
+csEl.innerHTML+=`<div class="ch-stat-row"><div class="ch-stat-color" style="background:${colors[ch]}"></div><div class="ch-stat-name">${ch}</div><div class="ch-stat-val">${chPerf}/${chItems.length} (${pct}%)</div></div>`});
+let grade,msg;if(acc===100){grade="🏆";msg="إتقان تام! ذاكرتك خارقة — أنت جاهز للاختبار 💪"}else if(acc>=85){grade="🥇";msg="ممتاز! بضع مراجعات بسيطة وستكون مثالياً"}else if(acc>=70){grade="🥈";msg="جيد جداً — ركّز على المصطلحات الضعيفة"}else if(acc>=50){grade="🥉";msg="جيد — هذه تحتاج مراجعة أعمق"}else{grade="📚";msg="التكرار هو أساس الحفظ — حاول مرة أخرى!"}
+document.getElementById("resGrade").textContent=grade;document.getElementById("resMsg").textContent=msg;document.getElementById("resSubtitle").textContent=`أكملت ${total} مصطلح في ${getElapsed()}`;
+const wl=document.getElementById("weakList"),wb=document.getElementById("weakBox");if(weak.length===0){wb.style.borderColor="rgba(16,185,129,.3)";wb.style.background="rgba(16,185,129,.07)";wl.innerHTML=`<span class="no-weak">🎉 أجبت على الكل من أول محاولة!</span>`;document.querySelector(".weak-terms h4").style.color="#10b981";document.querySelector(".weak-terms h4").textContent="✅ لا توجد مصطلحات ضعيفة:"}else{let h=weak.map(it=>`<span class="weak-pill" style="background:${colors[it.cat]}">${it.term} (${termFails[it.term]}×)</span>`).join("");h+=`<div style="width:100%;margin-top:10px;font-size:.78rem;color:var(--text-dim);font-weight:700;text-align:right">💡 نصيحة: راجع المصطلحات المتشابهة معاً لتفرّق بينها</div>`;wl.innerHTML=h}
+showResultsDiffs();document.getElementById("resultsScreen").classList.add("show")}
+function showResults(){buildRes(correctCount,wrongCount)}
+function showExamRes(){buildRes(correctCount,wrongCount)}
+function closeResults(){document.getElementById("resultsScreen").classList.remove("show");toggleAnswers()}
+
+function triggerWin(){const end=Date.now()+4000,d={startVelocity:35,spread:360,ticks:70,zIndex:100};const r=(a,b)=>Math.random()*(b-a)+a;const iv=setInterval(()=>{if(Date.now()>end)return clearInterval(iv);const pc=60*((end-Date.now())/4000),clr=["#00d4b4","#6366f1","#f59e0b","#10b981"];confetti({...d,particleCount:pc,colors:clr,origin:{x:r(.1,.3),y:Math.random()-.2}});confetti({...d,particleCount:pc,colors:clr,origin:{x:r(.7,.9),y:Math.random()-.2}})},250)}
+
+/* ══ ANSWER TABLE ══ */
+const ansContent=document.getElementById("ansContent");
+chapters.forEach(ch=>{const title=document.createElement("div");title.className="ch-title";title.style.background=colors[ch];title.textContent=ch;ansContent.appendChild(title);const wrap=document.createElement("div");wrap.className="table-wrap";const tbl=document.createElement("table");tbl.innerHTML=`<thead><tr><th>المصطلح</th><th>Slide</th><th>التعريف الإنجليزي</th><th>التعريف بالعربي</th><th>التفاصيل</th><th>الرابط الذهني</th></tr></thead><tbody>${items.filter(i=>i.cat===ch).map(i=>`<tr><td style="color:${colors[ch]};font-weight:900;white-space:nowrap">${i.term}</td><td class="slide-cell">📄 ${i.slide||"—"}</td><td><div class="enCell">${cleanCite(i.en)}</div></td><td>${cleanCite(i.ar)}</td><td class="details-cell">${(cleanCite(i.details)||"").replace(/\n/g,"<br>")}</td><td style="color:#a78bfa;font-size:.82rem">🧠 ${i.mnemonic}</td></tr>`).join("")}</tbody>`;wrap.appendChild(tbl);ansContent.appendChild(wrap)});
+function toggleAnswers(){const b=document.getElementById("answers");b.style.display=b.style.display==="block"?"none":"block";if(b.style.display==="block")b.scrollIntoView({behavior:"smooth"})}
+
+/* ══════════════════════════════════════════
+   ⚡ DIFFS — STATIC PANEL
+══════════════════════════════════════════ */
+function renderDiffsPanel(){const c=document.getElementById("diffsContent");if(!c||diffs.length===0)return;c.innerHTML=diffs.map(d=>`<div class="diff-card"><div class="diff-title">⚡ ${d.title}</div><div class="diff-row"><div class="diff-col"><div class="diff-col-label">${d.terms[0]}</div><div class="diff-col-text diff-en">${cleanCite(d.enA)}</div><div class="diff-col-text">${cleanCite(d.arA)}</div></div><div class="diff-col"><div class="diff-col-label">${d.terms[1]}</div><div class="diff-col-text diff-en">${cleanCite(d.enB)}</div><div class="diff-col-text">${cleanCite(d.arB)}</div></div></div><div class="diff-tip">💡 ${cleanCite(d.tip)}</div></div>`).join("")}
+renderDiffsPanel();
+function toggleDiffsPanel(){const p=document.getElementById("diffsPanel");p.classList.toggle("show");if(p.classList.contains("show"))p.scrollIntoView({behavior:"smooth"})}
+
+/* ══════════════════════════════════════════
+   ⚡ DIFFS — INTERACTIVE QUIZ MODE
+══════════════════════════════════════════ */
+let diffsStarted=false,diffsQueue=[],diffsIdx=0,diffsAnswered=false;
+function initDiffsQuiz(){if(diffs.length===0){showToast("⚡ لا توجد فروقات محددة");return}startTimer();diffsQueue=shuffle([...diffs]);document.getElementById("diffsTotal").textContent=diffsQueue.length;renderDiffsQ()}
+function renderDiffsQ(){if(diffsIdx>=diffsQueue.length){showToast("🎉 أنهيت كل الفروقات!");return}
+diffsAnswered=false;const d=diffsQueue[diffsIdx];document.getElementById("diffsQ").textContent=diffsIdx+1;
+const qType=Math.random()>0.5?0:1;const askTerm=d.terms[qType];const correctEn=qType===0?d.enA:d.enB;const correctAr=qType===0?d.arA:d.arB;const wrongEn=qType===0?d.enB:d.enA;const wrongAr=qType===0?d.arB:d.arA;const wrongTerm=d.terms[1-qType];
+document.getElementById("diffsQTitle").textContent=`وش الوصف الصحيح لـ "${askTerm}"؟`;
+const opts=shuffle([{en:correctEn,ar:correctAr,correct:true},{en:wrongEn,ar:wrongAr,correct:false,label:wrongTerm}]);
+const oel=document.getElementById("diffsOptions");oel.innerHTML="";
+opts.forEach(o=>{const btn=document.createElement("button");btn.className="diffs-opt";btn.innerHTML=`<div style="direction:ltr;text-align:left;margin-bottom:4px;font-weight:800">${cleanCite(o.en)}</div><div>${cleanCite(o.ar)}</div>`;btn.onclick=()=>handleDiffsPick(o,d,btn);oel.appendChild(btn)});
+document.getElementById("diffsExplain").classList.remove("show");document.getElementById("diffsExplain").innerHTML="";document.getElementById("diffsNextBtn").classList.remove("show");document.getElementById("diffsNextBtn").style.display="none"}
+function handleDiffsPick(opt,d,btn){if(diffsAnswered)return;diffsAnswered=true;document.querySelectorAll(".diffs-opt").forEach(b=>b.disabled=true);
+if(opt.correct){btn.classList.add("correct-pick");playSound(true);correctCount++;updateStreak(true);updateAcc();bumpScore();showToast("✅ صح!")}
+else{btn.classList.add("wrong-pick");document.querySelectorAll(".diffs-opt").forEach(b=>{if(!b.classList.contains("wrong-pick"))b.classList.add("correct-pick")});playSound(false);wrongCount++;updateStreak(false);updateAcc();showToast("❌ خطأ")}
+const ex=document.getElementById("diffsExplain");ex.innerHTML=`<div class="diff-row"><div class="diff-col"><div class="diff-col-label">${d.terms[0]}</div><div class="diff-col-text diff-en">${cleanCite(d.enA)}</div><div class="diff-col-text">${cleanCite(d.arA)}</div></div><div class="diff-col"><div class="diff-col-label">${d.terms[1]}</div><div class="diff-col-text diff-en">${cleanCite(d.enB)}</div><div class="diff-col-text">${cleanCite(d.arB)}</div></div></div><div class="diff-tip">💡 ${cleanCite(d.tip)}</div>`;ex.classList.add("show");
+document.getElementById("diffsNextBtn").style.display="";document.getElementById("diffsNextBtn").classList.add("show")}
+function nextDiffsQ(){diffsIdx++;renderDiffsQ()}
+
+/* ══ DIFFS IN RESULTS ══ */
+function showResultsDiffs(){const weakTerms=items.filter(it=>termFails[it.term]>0).map(it=>it.rawTerm);const relDiffs=diffs.filter(d=>d.terms.some(t=>weakTerms.some(w=>w.includes(t)||t.includes(w))));const el=document.getElementById("resultsDiffs"),list=document.getElementById("resultsDiffsList");if(relDiffs.length===0){el.style.display="none";return}el.style.display="block";list.innerHTML=relDiffs.map(d=>`<div class="diff-card-results"><div class="diff-title">⚡ ${d.title}</div><div class="diff-row"><div class="diff-col"><div class="diff-col-label">${d.terms[0]}</div><div class="diff-col-text diff-en" style="font-size:.78rem">${cleanCite(d.enA)}</div><div class="diff-col-text">${cleanCite(d.arA)}</div></div><div class="diff-col"><div class="diff-col-label">${d.terms[1]}</div><div class="diff-col-text diff-en" style="font-size:.78rem">${cleanCite(d.enB)}</div><div class="diff-col-text">${cleanCite(d.arB)}</div></div></div><div class="diff-tip">💡 ${cleanCite(d.tip)}</div></div>`).join("")}
+</script>
+</body>
 </html>
