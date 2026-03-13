@@ -39,14 +39,16 @@
     .subject:nth-child(3){animation-delay:.3s}
     .subject:nth-child(4){animation-delay:.4s}
     .subject:nth-child(5){animation-delay:.5s}
+    .subject:nth-child(6){animation-delay:.6s}
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-    .subject-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-radius:16px 16px 0 0;color:#fff;font-weight:900;font-size:1.1rem;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s}
+    .subject-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-radius:16px 16px 0 0;color:#fff;font-weight:900;font-size:1.05rem;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s}
     .subject-header:hover{transform:translateY(-2px)}
     .subject-header::after{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(255,255,255,.1),transparent);pointer-events:none}
     .subject-header .arrow{margin-right:auto;font-size:1.2rem;transition:transform .3s;flex-shrink:0}
     .subject-header.open .arrow{transform:rotate(180deg)}
     .subject-icon{font-size:1.4rem}
+    .subject-code{font-size:.72rem;opacity:.7;margin-right:4px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:999px}
 
     .chapters{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;padding:12px;overflow:hidden}
     .chapters.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;animation:fadeUp .3s ease}
@@ -60,13 +62,12 @@
     .ch-link .ch-arrow{margin-right:auto;color:var(--text-dim);font-size:.9rem;transition:transform .2s}
     .ch-link:hover .ch-arrow{transform:translateX(-4px);color:var(--accent)}
 
-    .empty-msg{text-align:center;padding:20px;color:var(--text-dim);font-size:.85rem;font-weight:700}
-
     .footer{text-align:center;color:var(--text-dim);font-size:.82rem;padding:30px 20px;line-height:1.9}
     .signature{font-weight:900;color:var(--accent);font-size:.88rem;margin-bottom:2px}
 
     @media(max-width:500px){
       header h1{font-size:1.6rem}
+      .subject-header{font-size:.92rem;padding:14px 16px}
       .chapters.open{grid-template-columns:1fr}
       .ch-link{padding:12px 14px}
     }
@@ -92,70 +93,89 @@
   </div>
 
   <script>
-    /* ══ THEME ══ */
     let isLight = false;
-    function toggleTheme() {
-      isLight = !isLight;
-      document.body.classList.toggle("light", isLight);
-    }
+    function toggleTheme() { isLight = !isLight; document.body.classList.toggle("light", isLight); }
 
     /* ══════════════════════════════════════════
-       📚 المواد والشابترات
-       ════════════════════════════════════════
-       عدّل هنا فقط — أضف مواد وشابترات جديدة
-       
-       folder: اسم الفولدر بالإنجليزي (اللي بـ GitHub)
-       name: اسم المادة بالعربي
-       icon: إيموجي المادة
-       color: لون المادة
-       chapters: قائمة الشابترات
-         - file: اسم ملف الـ HTML
-         - title: عنوان الشابتر
-         - sub: وصف قصير (اختياري)
+       📚 المواد — عدّل هنا فقط
     ══════════════════════════════════════════ */
     const subjects = [
       {
-        folder: "security",
-        name: "أمن الشبكات",
-        icon: "🛡️",
-        color: "#0d9488",
-        chapters: [
-          { file: "ch1.html", title: "Chapter 1", sub: "Introduction to Security" },
-          { file: "ch2.html", title: "Chapter 2", sub: "Threats & Attacks" },
-        ]
-      },
-      {
-        folder: "data",
-        name: "تحليل البيانات",
-        icon: "📊",
-        color: "#6366f1",
-        chapters: [
-          { file: "ch1.html", title: "Chapter 1", sub: "Data Basics" },
-        ]
-      },
-      {
         folder: "mobile",
-        name: "تطبيق الهواتف",
+        name: "تطبيقات الهواتف الذكية",
+        nameEn: "Mobile Applications",
+        code: "تال 1391",
         icon: "📱",
         color: "#b45309",
         chapters: [
-          { file: "ch1.html", title: "Chapter 1", sub: "Mobile Development" },
+          { file: "ch1.html", title: "Chapter 1", sub: "" },
+          { file: "ch2.html", title: "Chapter 2", sub: "" },
+        ]
+      },
+      {
+        folder: "bigdata",
+        name: "تحليل البيانات الضخمة",
+        nameEn: "Big Data Analytics",
+        code: "تال 1322",
+        icon: "📊",
+        color: "#6366f1",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "" },
+          { file: "ch2.html", title: "Chapter 2", sub: "" },
+        ]
+      },
+      {
+        folder: "iot",
+        name: "انترنت الأشياء",
+        nameEn: "Internet of Things",
+        code: "تال 1441",
+        icon: "🌐",
+        color: "#0369a1",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "" },
+          { file: "ch2.html", title: "Chapter 2", sub: "" },
         ]
       },
       {
         folder: "cyber",
-        name: "مبادئ أمن سيبراني",
+        name: "مبادئ الأمن السيبراني",
+        nameEn: "Cybersecurity Principles",
+        code: "تال 1410",
         icon: "🔐",
         color: "#be185d",
         chapters: [
-          { file: "ch1.html", title: "Chapter 1", sub: "Cyber Security Basics" },
+          { file: "ch1.html", title: "Chapter 1", sub: "" },
+          { file: "ch2.html", title: "Chapter 2", sub: "" },
+        ]
+      },
+      {
+        folder: "netsec",
+        name: "أمن الشبكات وتقنيات التشفير",
+        nameEn: "Network Security & Cryptography",
+        code: "تال 1413",
+        icon: "🛡️",
+        color: "#0d9488",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "" },
+          { file: "ch2.html", title: "Chapter 2", sub: "" },
+        ]
+      },
+      {
+        folder: "systems",
+        name: "عمارة وتقنية الأنظمة المتكاملة",
+        nameEn: "Integrated Systems Architecture",
+        code: "تال 1331",
+        icon: "⚙️",
+        color: "#15803d",
+        chapters: [
+          { file: "ch1.html", title: "Chapter 1", sub: "" },
+          { file: "ch2.html", title: "Chapter 2", sub: "" },
         ]
       },
     ];
 
     /* ══ RENDER ══ */
     const container = document.getElementById("subjectsContainer");
-
     subjects.forEach((subj, idx) => {
       const div = document.createElement("div");
       div.className = "subject";
@@ -163,40 +183,32 @@
       const header = document.createElement("div");
       header.className = "subject-header";
       header.style.background = subj.color;
-      header.innerHTML = `<span class="subject-icon">${subj.icon}</span> ${subj.name} <span style="font-size:.78rem;opacity:.7;margin-right:6px">(${subj.chapters.length} شابتر)</span> <span class="arrow">▼</span>`;
+      header.innerHTML = `<span class="subject-icon">${subj.icon}</span> ${subj.name} <span class="subject-code">${subj.code}</span> <span class="arrow">▼</span>`;
 
       const chaptersDiv = document.createElement("div");
       chaptersDiv.className = "chapters";
 
-      if (subj.chapters.length === 0) {
-        chaptersDiv.innerHTML = `<div class="empty-msg">🔜 قريباً...</div>`;
-      } else {
-        subj.chapters.forEach((ch, i) => {
-          const a = document.createElement("a");
-          a.className = "ch-link";
-          a.href = `${subj.folder}/${ch.file}`;
-          a.innerHTML = `
-            <div class="ch-num" style="background:${subj.color}">${i + 1}</div>
-            <div class="ch-text">
-              <div class="ch-title">${ch.title}</div>
-              ${ch.sub ? `<div class="ch-sub">${ch.sub}</div>` : ""}
-            </div>
-            <span class="ch-arrow">←</span>
-          `;
-          chaptersDiv.appendChild(a);
-        });
-      }
+      subj.chapters.forEach((ch, i) => {
+        const a = document.createElement("a");
+        a.className = "ch-link";
+        a.href = `${subj.folder}/${ch.file}`;
+        a.innerHTML = `
+          <div class="ch-num" style="background:${subj.color}">${i + 1}</div>
+          <div class="ch-text">
+            <div class="ch-title">${ch.title}</div>
+            ${ch.sub ? `<div class="ch-sub">${ch.sub}</div>` : `<div class="ch-sub">${subj.nameEn}</div>`}
+          </div>
+          <span class="ch-arrow">←</span>
+        `;
+        chaptersDiv.appendChild(a);
+      });
 
       header.addEventListener("click", () => {
         header.classList.toggle("open");
         chaptersDiv.classList.toggle("open");
       });
 
-      // Auto-open first subject
-      if (idx === 0) {
-        header.classList.add("open");
-        chaptersDiv.classList.add("open");
-      }
+      if (idx === 0) { header.classList.add("open"); chaptersDiv.classList.add("open"); }
 
       div.appendChild(header);
       div.appendChild(chaptersDiv);
